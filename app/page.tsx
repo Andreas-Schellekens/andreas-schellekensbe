@@ -10,6 +10,7 @@ const content = {
     nav: {
       home: "Home",
       about: "Over mij",
+      projects: "Projecten",
       contact: "Contact",
       languageLabel: "Taal",
       dutch: "Nederlands",
@@ -17,7 +18,7 @@ const content = {
     },
     hero: {
       welcome: "Welkom",
-      greeting: "Hallo, ik ben [Naam]",
+      greeting: "Hey, ik ben Andreas",
       headline:
         "Ik ontwerp en bouw moderne digitale ervaringen die snel, doordacht en opvallend zijn.",
       cta: "Bekijk mijn werk",
@@ -26,9 +27,24 @@ const content = {
     featured: {
       title: "Uitgelicht Werk",
       subtitle: "Wat ik doe",
-      projectTitle: "Project",
-      projectDescription:
-        "Hier komt een korte beschrijving van dit project. Vervang deze placeholder door echte projectdetails.",
+      projects: [
+        {
+          title: "Binderbase",
+          description:
+            "Beheer je Pokemon kaarten, verzamelingen en binders met gemak. Alles overzichtelijk, veilig en intuïtief op één plek.",
+          image: "/BinderBase.svg",
+        },
+        {
+          title: "Project komt binnenkort",
+          description: "Dit project vul ik later nog aan.",
+          image: "/window.svg",
+        },
+        {
+          title: "Project komt binnenkort",
+          description: "Dit project vul ik later nog aan.",
+          image: "/globe.svg",
+        },
+      ],
       projectButton: "Bekijk project",
       projectCoverAlt: "Project omslag",
     },
@@ -37,6 +53,7 @@ const content = {
     nav: {
       home: "Home",
       about: "About Me",
+      projects: "Projects",
       contact: "Contact",
       languageLabel: "Language",
       dutch: "Dutch",
@@ -44,7 +61,7 @@ const content = {
     },
     hero: {
       welcome: "Welcome",
-      greeting: "Hi, I am [Name]",
+      greeting: "Hi, I am Andreas",
       headline:
         "I design and build modern digital experiences that are fast, thoughtful, and built to stand out.",
       cta: "View My Work",
@@ -53,9 +70,24 @@ const content = {
     featured: {
       title: "Featured Work",
       subtitle: "What I Do",
-      projectTitle: "Project",
-      projectDescription:
-        "A short description of this project will go here. Replace this placeholder with your real work details.",
+      projects: [
+        {
+          title: "Binderbase",
+          description:
+            "Binderbase is a featured project. The other projects will be Manage your Pokémon cards, collections, and binders with ease. Everything is organized, secure, and intuitive—all in one place.",
+          image: "/BinderBase.svg",
+        },
+        {
+          title: "Project coming soon",
+          description: "I will add this project later.",
+          image: "/window.svg",
+        },
+        {
+          title: "Project coming soon",
+          description: "I will add this project later.",
+          image: "/globe.svg",
+        },
+      ],
       projectButton: "Explore Project",
       projectCoverAlt: "Project cover",
     },
@@ -72,50 +104,81 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-slate-100">
-      <header className="border-b border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] backdrop-blur">
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-          <a href="#" className="text-lg font-semibold tracking-wide text-[var(--color-accent)]">
-            YourName
+      <header className="sticky top-0 z-40 border-b border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-bg)_82%,transparent)] backdrop-blur-xl">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent opacity-60" />
+        <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+          <a href="#" className="group space-y-1">
+            <p className="text-lg font-semibold tracking-wide text-[var(--color-accent)] transition-all duration-300 group-hover:text-[var(--color-highlight)]">
+              Andreas Schellekens
+            </p>
+            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Digital Builder</p>
           </a>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <ul className="flex items-center gap-4 text-sm sm:gap-6 sm:text-base">
-            <li>
-              <a
-                href="#"
-                className="text-slate-200 transition-all duration-300 hover:text-[var(--color-accent)]"
-              >
-                {t.nav.home}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="text-slate-200 transition-all duration-300 hover:text-[var(--color-accent)]"
-              >
-                {t.nav.about}
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="text-slate-200 transition-all duration-300 hover:text-[var(--color-accent)]"
-              >
-                {t.nav.contact}
-              </a>
-            </li>
+
+          <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
+            <ul className="flex items-center gap-1.5 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_70%,transparent)] px-2 py-3 text-sm shadow-lg shadow-black/20 sm:text-base">
+              <li>
+                <a
+                  href="#"
+                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
+                >
+                  {t.nav.home}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
+                >
+                  {t.nav.about}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
+                >
+                  {t.nav.projects}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
+                >
+                  {t.nav.contact}
+                </a>
+              </li>
             </ul>
-            <label className="flex items-center gap-2 text-xs text-slate-300 sm:text-sm">
-              <span>{t.nav.languageLabel}</span>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as Language)}
-                className="rounded-md border border-[var(--color-surface)] bg-[var(--color-layer)] px-2 py-1 text-slate-100 outline-none transition-all duration-300 hover:border-[var(--color-accent)] focus:border-[var(--color-accent)]"
-                aria-label={t.nav.languageLabel}
-              >
-                <option value="nl">{t.nav.dutch}</option>
-                <option value="en">{t.nav.english}</option>
-              </select>
-            </label>
+
+            <div className="flex items-center gap-1.5 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_72%,transparent)] px-2 py-1.5 text-xs text-slate-300 shadow-lg shadow-black/20 sm:text-sm">
+              <span className="pl-1 uppercase tracking-wider">{t.nav.languageLabel}</span>
+              <div className="flex items-center rounded-full bg-[var(--color-bg)] p-1">
+                <button
+                  type="button"
+                  onClick={() => setLanguage("nl")}
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-300 sm:text-sm ${
+                    language === "nl"
+                      ? "bg-[var(--color-accent)] text-[var(--color-bg)]"
+                      : "text-slate-300 hover:text-[var(--color-accent)]"
+                  }`}
+                  aria-pressed={language === "nl"}
+                >
+                  {t.nav.dutch}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage("en")}
+                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-300 sm:text-sm ${
+                    language === "en"
+                      ? "bg-[var(--color-accent)] text-[var(--color-bg)]"
+                      : "text-slate-300 hover:text-[var(--color-accent)]"
+                  }`}
+                  aria-pressed={language === "en"}
+                >
+                  {t.nav.english}
+                </button>
+              </div>
+            </div>
           </div>
         </nav>
       </header>
@@ -159,28 +222,24 @@ export default function Home() {
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((project) => (
+            {t.featured.projects.map((project, index) => (
               <article
-                key={project}
+                key={`${project.title}-${index}`}
                 className="group overflow-hidden rounded-2xl border border-[var(--color-surface)] bg-[var(--color-layer)] transition-all duration-300 hover:-translate-y-2 hover:border-[var(--color-accent)]"
               >
                 <div className="overflow-hidden">
                   <Image
-                    src="https://via.placeholder.com/600x400"
-                    alt={`${t.featured.projectTitle} ${project} ${t.featured.projectCoverAlt}`}
+                    src={project.image}
+                    alt={`${project.title} ${t.featured.projectCoverAlt}`}
                     width={600}
                     height={400}
                     unoptimized
-                    className="h-52 w-full object-cover transition-all duration-300 group-hover:scale-105"
+                    className="h-52 w-full bg-white p-8 object-contain transition-all duration-300 group-hover:scale-105"
                   />
                 </div>
                 <div className="space-y-3 p-5">
-                  <h4 className="text-lg font-semibold text-white">
-                    {t.featured.projectTitle} {project}
-                  </h4>
-                  <p className="text-sm leading-relaxed text-slate-300">
-                    {t.featured.projectDescription}
-                  </p>
+                  <h4 className="text-lg font-semibold text-white">{project.title}</h4>
+                  <p className="text-sm leading-relaxed text-slate-300">{project.description}</p>
                   <button
                     type="button"
                     className="rounded-full border border-[var(--color-deep)] bg-[color-mix(in_srgb,var(--color-deep)_40%,transparent)] px-4 py-2 text-sm font-medium text-[var(--color-accent)] transition-all duration-300 hover:bg-[var(--color-highlight)] hover:text-white"
