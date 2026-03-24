@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { CSSProperties, MouseEvent, useMemo, useState } from "react";
+import { useLanguage } from "./components/language-provider";
 
-type Language = "nl" | "en";
+type PointerState = { x: number; y: number; active: boolean };
 
 const content = {
   nl: {
@@ -17,32 +18,56 @@ const content = {
       english: "Engels",
     },
     hero: {
-      welcome: "Welkom",
+      welcome: "Beschikbaar voor nieuwe projecten",
       greeting: "Hey, ik ben Andreas",
       headline:
         "Ik ontwerp en bouw moderne digitale ervaringen die snel, doordacht en opvallend zijn.",
-      cta: "Bekijk mijn werk",
+      ctaPrimary: "Bekijk mijn werk",
+      ctaSecondary: "Contact",
       profileAlt: "Profielfoto",
+      highlights: ["UX-first", "Frontend + Product", "Snel en schaalbaar"],
+    },
+    about: {
+      title: "Wat ik doe",
+      subtitle:
+        "Van design thinking tot productiecode: ik lever interfaces die helder voelen en sterk presteren.",
+      cards: [
+        {
+          title: "Strategische UX",
+          description: "Van wireframes tot pixel-perfect flows die intuitief aanvoelen.",
+        },
+        {
+          title: "Snelle ontwikkeling",
+          description: "Moderne stacks, duidelijke componenten en focus op performance.",
+        },
+        {
+          title: "Product samenwerking",
+          description: "Korte feedbackloops met stakeholders en iteratie op echte data.",
+        },
+      ],
     },
     featured: {
       title: "Uitgelicht Werk",
-      subtitle: "Wat ik doe",
+      subtitle: "Recente cases",
       projects: [
         {
           title: "Binderbase",
           description:
-            "Beheer je Pokemon kaarten, verzamelingen en binders met gemak. Alles overzichtelijk, veilig en intuïtief op één plek.",
+            "Beheer je Pokemon kaarten, verzamelingen en binders met gemak. Alles overzichtelijk, veilig en intuitief op een plek.",
           image: "/BinderBase.svg",
+          tags: ["Web App", "UX Design", "Frontend", "Backend"],
         },
         {
           title: "Project komt binnenkort",
           description: "Dit project vul ik later nog aan.",
           image: "/window.svg",
+          tags: ["SaaS", "Dashboard", "In opbouw"],
         },
         {
           title: "Project komt binnenkort",
           description: "Dit project vul ik later nog aan.",
           image: "/globe.svg",
+          tags: ["Brand Site", "Performance", "In opbouw"],
         },
       ],
       projectButton: "Bekijk project",
@@ -60,32 +85,56 @@ const content = {
       english: "English",
     },
     hero: {
-      welcome: "Welcome",
+      welcome: "Open for new projects",
       greeting: "Hi, I am Andreas",
       headline:
         "I design and build modern digital experiences that are fast, thoughtful, and built to stand out.",
-      cta: "View My Work",
+      ctaPrimary: "View My Work",
+      ctaSecondary: "Contact",
       profileAlt: "Profile picture",
+      highlights: ["UX-first", "Frontend + Product", "Fast and scalable"],
+    },
+    about: {
+      title: "What I do",
+      subtitle:
+        "From design thinking to production code: I ship interfaces that feel clear and perform well.",
+      cards: [
+        {
+          title: "Strategic UX",
+          description: "From wireframes to pixel-perfect flows that feel intuitive.",
+        },
+        {
+          title: "Fast development",
+          description: "Modern stacks, clean components, and a strong focus on performance.",
+        },
+        {
+          title: "Product collaboration",
+          description: "Short feedback loops with stakeholders and iteration on real data.",
+        },
+      ],
     },
     featured: {
       title: "Featured Work",
-      subtitle: "What I Do",
+      subtitle: "Recent cases",
       projects: [
         {
           title: "Binderbase",
           description:
-            "Binderbase is a featured project. The other projects will be Manage your Pokémon cards, collections, and binders with ease. Everything is organized, secure, and intuitive—all in one place.",
+            "Manage your Pokemon cards, collections, and binders with ease. Everything is organized, secure, and intuitive in one place.",
           image: "/BinderBase.svg",
+          tags: ["Web App", "UX Design", "Backend", "Frontend"],
         },
         {
           title: "Project coming soon",
           description: "I will add this project later.",
           image: "/window.svg",
+          tags: ["SaaS", "Dashboard", "In progress"],
         },
         {
           title: "Project coming soon",
           description: "I will add this project later.",
           image: "/globe.svg",
+          tags: ["Brand Site", "Performance", "In progress"],
         },
       ],
       projectButton: "Explore Project",
@@ -95,137 +144,165 @@ const content = {
 } as const;
 
 export default function Home() {
-  const [language, setLanguage] = useState<Language>("nl");
+  const { language } = useLanguage();
+  const [heroPointer, setHeroPointer] = useState<PointerState>({
+    x: 50,
+    y: 50,
+    active: false,
+  });
   const t = content[language];
 
-  useEffect(() => {
-    document.documentElement.lang = language;
-  }, [language]);
+  const heroCardStyle = useMemo(
+    () =>
+      ({
+        transform: `perspective(900px) rotateX(${
+          heroPointer.active ? (50 - heroPointer.y) / 7 : 0
+        }deg) rotateY(${heroPointer.active ? (heroPointer.x - 50) / 6 : 0}deg)`,
+      }) as CSSProperties,
+    [heroPointer.active, heroPointer.x, heroPointer.y],
+  );
+
+  const heroShineStyle = useMemo(
+    () =>
+      ({
+        "--shine-x": `${heroPointer.x}%`,
+        "--shine-y": `${heroPointer.y}%`,
+      }) as CSSProperties,
+    [heroPointer.x, heroPointer.y],
+  );
+
+  const revealStyle = (delay: number) =>
+    ({
+      "--reveal-delay": `${delay}ms`,
+    }) as CSSProperties;
+
+  const handleHeroMove = (event: MouseEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+    const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+
+    setHeroPointer({
+      x: Math.min(100, Math.max(0, x)),
+      y: Math.min(100, Math.max(0, y)),
+      active: true,
+    });
+  };
+
+  const resetHeroPointer = () => {
+    setHeroPointer({ x: 50, y: 50, active: false });
+  };
+
+  const handleProjectMove = (event: MouseEvent<HTMLElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - bounds.left) / bounds.width) * 100;
+    const y = ((event.clientY - bounds.top) / bounds.height) * 100;
+
+    event.currentTarget.style.setProperty("--spotlight-x", `${x}%`);
+    event.currentTarget.style.setProperty("--spotlight-y", `${y}%`);
+  };
+
+  const resetProjectSpotlight = (event: MouseEvent<HTMLElement>) => {
+    event.currentTarget.style.setProperty("--spotlight-x", "50%");
+    event.currentTarget.style.setProperty("--spotlight-y", "50%");
+  };
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] text-slate-100">
-      <header className="sticky top-0 z-40 border-b border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-bg)_82%,transparent)] backdrop-blur-xl">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-accent)] to-transparent opacity-60" />
-        <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <a href="#" className="group space-y-1">
-            <p className="text-lg font-semibold tracking-wide text-[var(--color-accent)] transition-all duration-300 group-hover:text-[var(--color-highlight)]">
-              Andreas Schellekens
+    <div className="relative min-h-screen overflow-x-clip bg-[var(--color-bg)] text-slate-100">
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="ambient-orb ambient-orb--one" />
+        <div className="ambient-orb ambient-orb--two" />
+        <div className="ambient-orb ambient-orb--three" />
+        <div className="ambient-grid" />
+      </div>
+
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 py-12 sm:py-16">
+        <section id="home" className="grid items-center gap-10 lg:grid-cols-2">
+          <div className="reveal-item space-y-8" style={revealStyle(120)}>
+            <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_72%,transparent)] px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--color-accent)]">
+              <span className="inline-flex h-2 w-2 rounded-full bg-[var(--color-highlight)] pulse-dot" />
+              {t.hero.welcome}
             </p>
-            <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Digital Builder</p>
-          </a>
-
-          <div className="flex flex-wrap items-center justify-end gap-3 sm:gap-4">
-            <ul className="flex items-center gap-1.5 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_70%,transparent)] px-2 py-3 text-sm shadow-lg shadow-black/20 sm:text-base">
-              <li>
-                <a
-                  href="#"
-                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
-                >
-                  {t.nav.home}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
-                >
-                  {t.nav.about}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
-                >
-                  {t.nav.projects}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="rounded-full px-4 py-2 text-slate-200 transition-all duration-300 hover:bg-[var(--color-deep)] hover:text-[var(--color-accent)]"
-                >
-                  {t.nav.contact}
-                </a>
-              </li>
-            </ul>
-
-            <div className="flex items-center gap-1.5 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_72%,transparent)] px-2 py-1.5 text-xs text-slate-300 shadow-lg shadow-black/20 sm:text-sm">
-              <span className="pl-1 uppercase tracking-wider">{t.nav.languageLabel}</span>
-              <div className="flex items-center rounded-full bg-[var(--color-bg)] p-1">
-                <button
-                  type="button"
-                  onClick={() => setLanguage("nl")}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-300 sm:text-sm ${
-                    language === "nl"
-                      ? "bg-[var(--color-accent)] text-[var(--color-bg)]"
-                      : "text-slate-300 hover:text-[var(--color-accent)]"
-                  }`}
-                  aria-pressed={language === "nl"}
-                >
-                  {t.nav.dutch}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLanguage("en")}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-all duration-300 sm:text-sm ${
-                    language === "en"
-                      ? "bg-[var(--color-accent)] text-[var(--color-bg)]"
-                      : "text-slate-300 hover:text-[var(--color-accent)]"
-                  }`}
-                  aria-pressed={language === "en"}
-                >
-                  {t.nav.english}
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
-
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 py-12 sm:py-16">
-        <section className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="space-y-6">
-            <p className="text-sm uppercase tracking-[0.2em] text-[var(--color-accent)]">{t.hero.welcome}</p>
             <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">
               {t.hero.greeting}
             </h1>
             <h2 className="max-w-xl text-xl font-medium leading-relaxed text-slate-200 sm:text-2xl">
               {t.hero.headline}
             </h2>
-            <a
-              href="#"
-              className="inline-flex items-center rounded-full bg-[var(--color-accent)] px-7 py-3 text-sm font-semibold text-[var(--color-bg)] transition-all duration-300 hover:-translate-y-1 hover:bg-[var(--color-highlight)] hover:text-white"
-            >
-              {t.hero.cta}
-            </a>
+            <div className="flex flex-wrap items-center gap-3">
+              <a href="#projects" className="primary-btn">
+                {t.hero.ctaPrimary}
+                <span className="primary-btn-arrow" aria-hidden>
+                  {"->"}
+                </span>
+              </a>
+              <a href="mailto:hello@andreas-schellekens.be" className="ghost-btn">
+                {t.hero.ctaSecondary}
+              </a>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-xs text-slate-300 sm:text-sm">
+              {t.hero.highlights.map((item) => (
+                <span
+                  key={item}
+                  className="rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_60%,transparent)] px-3 py-1.5 tracking-wide"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div className="mx-auto w-full max-w-sm">
-            <div className="overflow-hidden rounded-3xl border border-[var(--color-surface)] bg-[var(--color-layer)] shadow-2xl shadow-black/30">
+          <div className="reveal-item mx-auto w-full max-w-sm" style={revealStyle(260)}>
+            <div
+              className="profile-shell"
+              style={heroCardStyle}
+              onMouseMove={handleHeroMove}
+              onMouseLeave={resetHeroPointer}
+            >
+              <div className="profile-shine" style={heroShineStyle} />
               <Image
                 src="/andreas.png"
                 alt={t.hero.profileAlt}
                 width={400}
                 height={400}
                 unoptimized
-                className="h-full w-full object-cover transition-all duration-300 hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500 ease-out hover:scale-[1.04]"
               />
             </div>
           </div>
         </section>
 
-        <section>
+        <section id="about" className="reveal-item space-y-8" style={revealStyle(160)}>
+          <div className="max-w-3xl space-y-3">
+            <h3 className="text-2xl font-semibold text-white sm:text-3xl">{t.about.title}</h3>
+            <p className="leading-relaxed text-slate-300">{t.about.subtitle}</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {t.about.cards.map((card, index) => (
+              <article
+                key={`${card.title}-${index}`}
+                className="glass-panel reveal-item rounded-2xl p-5"
+                style={revealStyle(220 + index * 80)}
+              >
+                <h4 className="text-lg font-semibold text-white">{card.title}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-slate-300">{card.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="projects" className="reveal-item" style={revealStyle(200)}>
           <div className="mb-8 flex items-end justify-between gap-4">
             <h3 className="text-2xl font-semibold text-white sm:text-3xl">{t.featured.title}</h3>
             <span className="text-sm text-slate-300">{t.featured.subtitle}</span>
           </div>
-
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {t.featured.projects.map((project, index) => (
               <article
                 key={`${project.title}-${index}`}
-                className="group overflow-hidden rounded-2xl border border-[var(--color-surface)] bg-[var(--color-layer)] transition-all duration-300 hover:-translate-y-2 hover:border-[var(--color-accent)]"
+                className="project-card reveal-item group overflow-hidden rounded-2xl border border-[var(--color-surface)] bg-[var(--color-layer)] transition-all duration-300 hover:-translate-y-2 hover:border-[var(--color-accent)]"
+                onMouseMove={handleProjectMove}
+                onMouseLeave={resetProjectSpotlight}
+                style={revealStyle(220 + index * 100)}
               >
                 <div className="overflow-hidden">
                   <Image
@@ -240,6 +317,16 @@ export default function Home() {
                 <div className="space-y-3 p-5">
                   <h4 className="text-lg font-semibold text-white">{project.title}</h4>
                   <p className="text-sm leading-relaxed text-slate-300">{project.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={`${project.title}-${tag}`}
+                        className="rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_55%,transparent)] px-2.5 py-1 text-xs text-slate-300"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                   <button
                     type="button"
                     className="rounded-full border border-[var(--color-deep)] bg-[color-mix(in_srgb,var(--color-deep)_40%,transparent)] px-4 py-2 text-sm font-medium text-[var(--color-accent)] transition-all duration-300 hover:bg-[var(--color-highlight)] hover:text-white"
@@ -251,6 +338,7 @@ export default function Home() {
             ))}
           </div>
         </section>
+
       </main>
     </div>
   );

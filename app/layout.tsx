@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { LanguageProvider } from "./components/language-provider";
+import SiteHeader from "./components/site-header";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -46,7 +48,12 @@ export default function RootLayout({
         } as React.CSSProperties
       }
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <LanguageProvider>
+          <SiteHeader />
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }
