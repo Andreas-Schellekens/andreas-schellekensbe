@@ -7,9 +7,10 @@ import type { PortfolioLocale } from "./content";
 
 type HeroIntroProps = {
   hero: PortfolioLocale["hero"];
+  contactEmail: string;
 };
 
-export default function HeroIntro({ hero }: HeroIntroProps) {
+export default function HeroIntro({ hero, contactEmail }: HeroIntroProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -98,7 +99,7 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
         >
-          <a href="mailto:hello@andreas-schellekens.be" className="portfolio-btn-primary" data-cursor="interactive">
+          <a href={`mailto:${contactEmail}`} className="portfolio-btn-primary" data-cursor="interactive">
             {hero.ctaPrimary}
           </a>
           <a href="#projects" className="portfolio-btn-secondary" data-cursor="interactive">

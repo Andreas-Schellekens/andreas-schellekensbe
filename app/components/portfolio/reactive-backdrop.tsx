@@ -23,13 +23,14 @@ export default function ReactiveBackdrop({ cursorX, cursorY }: ReactiveBackdropP
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
+      <div className="reactive-base-gradient" />
       <motion.div className="reactive-grid" style={{ y: gridShiftY }} />
       <motion.div className="reactive-orb reactive-orb-a" style={{ x: layerOneX, y: layerOneY }} />
       <motion.div className="reactive-orb reactive-orb-b" style={{ x: layerTwoX, y: layerTwoY }} />
       <motion.div className="reactive-orb reactive-orb-c" style={{ x: layerThreeX, y: layerThreeY }} />
       <motion.div className="floating-lines-host" style={{ x: linesX, y: linesY }}>
         <FloatingLines
-          linesGradient={["#A9C8FF", "#6B8FE6", "#4A67B8", "#37415C"]}
+          linesGradient={["#87A7EE", "#5678CA", "#344F9D", "#1F2F66"]}
           enabledWaves={["top", "middle", "bottom"]}
           lineCount={[3, 7, 4]}
           lineDistance={[5, 6, 5]}

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Syne } from "next/font/google";
+import { IBM_Plex_Mono, Syne, Geist } from "next/font/google";
 import { LanguageProvider } from "./components/language-provider";
 import SiteHeader from "./components/site-header";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const syne = Syne({
   variable: "--font-syne",
@@ -37,7 +40,7 @@ export default function RootLayout({
   return (
     <html
       lang="nl"
-      className={`${syne.variable} ${ibmPlexMono.variable} h-full antialiased`}
+      className={cn("h-full", "antialiased", syne.variable, ibmPlexMono.variable, "font-sans", geist.variable)}
       style={
         {
           "--color-bg": palette.bg,

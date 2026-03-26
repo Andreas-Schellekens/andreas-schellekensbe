@@ -84,7 +84,7 @@ export default function SiteHeader() {
             </Link>
           </li>
           <li>
-            <a href="mailto:hello@andreas-schellekens.be" className="site-nav-link">
+            <a href="mailto:andreas.schellekens8@gmail.com" className="site-nav-link">
               {t.contact}
             </a>
           </li>

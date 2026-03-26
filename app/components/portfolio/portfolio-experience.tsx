@@ -3,10 +3,40 @@
 import { motion, useMotionValue } from "framer-motion";
 import { type PointerEvent } from "react";
 import { useLanguage } from "../language-provider";
+import ContactDock from "./contact-dock";
 import { portfolioContent } from "./content";
 import HeroIntro from "./hero-intro";
 import ProjectStage from "./project-stage";
 import ReactiveBackdrop from "./reactive-backdrop";
+
+type IconProps = {
+  className?: string;
+};
+
+function LinkedInIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M6.94 8.5H3.56V20h3.38V8.5Zm.22-3.56a1.96 1.96 0 1 0-3.92 0 1.96 1.96 0 0 0 3.92 0Zm13.58 8.47c0-3.35-1.79-4.91-4.18-4.91a3.63 3.63 0 0 0-3.27 1.8V8.5H9.91V20h3.38v-6.04c0-1.59.3-3.12 2.26-3.12 1.94 0 1.97 1.81 1.97 3.22V20h3.38v-6.59Z" />
+    </svg>
+  );
+}
+
+function GitHubIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.09.67-.2.67-.48v-1.67c-2.73.58-3.3-1.18-3.3-1.18-.46-1.13-1.1-1.43-1.1-1.43-.9-.6.07-.59.07-.59 1 .07 1.53 1.03 1.53 1.03.88 1.55 2.32 1.1 2.88.84.09-.65.34-1.1.62-1.35-2.18-.25-4.47-1.13-4.47-5a3.96 3.96 0 0 1 1.03-2.75c-.1-.26-.45-1.3.1-2.7 0 0 .85-.28 2.78 1.05.8-.23 1.67-.34 2.53-.34.86 0 1.73.1 2.53.34 1.93-1.33 2.77-1.05 2.77-1.05.56 1.4.22 2.44.11 2.7a3.9 3.9 0 0 1 1.03 2.75c0 3.88-2.3 4.75-4.49 5 .35.3.67.9.67 1.82v2.7c0 .28.19.58.68.48A9.8 9.8 0 0 0 12 2.2Z" />
+    </svg>
+  );
+}
+
+function MailIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="1.8">
+      <rect x="3.1" y="5.2" width="17.8" height="13.6" rx="2.2" />
+      <path d="m4.4 7.2 7.6 6.1 7.6-6.1" />
+    </svg>
+  );
+}
 
 const cardVariants = {
   hidden: { opacity: 0, y: 34 },
@@ -45,7 +75,7 @@ export default function PortfolioExperience() {
       <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
 
       <main className="portfolio-main">
-        <HeroIntro key={language} hero={t.hero} />
+        <HeroIntro key={language} hero={t.hero} contactEmail={t.contact.email} />
 
         <section id="trajectory" className="portfolio-section space-y-8">
           <motion.div
@@ -80,26 +110,35 @@ export default function PortfolioExperience() {
 
         <ProjectStage projects={t.projects} />
 
-        <section id="contact" className="portfolio-contact-card">
+        <section id="contact" className="portfolio-section">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h2 className="portfolio-contact-title">{t.contact.title}</h2>
-            <p className="portfolio-contact-body">{t.contact.body}</p>
-            <div className="portfolio-contact-links">
-              <a href={`mailto:${t.contact.email}`} data-cursor="interactive">
-                <span>{t.contact.emailLabel}</span>
-                <strong>{t.contact.email}</strong>
-              </a>
-              <a href={t.contact.socialUrl} target="_blank" rel="noreferrer" data-cursor="interactive">
-                <span>{t.contact.socialLabel}</span>
-                <strong>{t.contact.socialName}</strong>
-              </a>
-            </div>
-            <p className="portfolio-contact-footer">{t.contact.footer}</p>
+            <ContactDock
+              items={[
+                {
+                  href: `mailto:${t.contact.email}`,
+                  label: t.contact.emailLabel,
+                  description: t.contact.email,
+                  icon: <MailIcon className="contact-dock-icon" />,
+                },
+                {
+                  href: t.contact.linkedinUrl,
+                  label: t.contact.linkedinLabel,
+                  description: t.contact.linkedinName,
+                  icon: <LinkedInIcon className="contact-dock-icon" />,
+                },
+                {
+                  href: t.contact.githubUrl,
+                  label: t.contact.githubLabel,
+                  description: t.contact.githubName,
+                  icon: <GitHubIcon className="contact-dock-icon" />,
+                },
+              ]}
+            />
           </motion.div>
         </section>
       </main>
