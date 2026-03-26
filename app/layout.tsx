@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { IBM_Plex_Mono, Syne } from "next/font/google";
 import { LanguageProvider } from "./components/language-provider";
 import SiteHeader from "./components/site-header";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
 });
 
-const jetBrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const palette = {
@@ -24,8 +25,8 @@ const palette = {
 };
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Modern portfolio website",
+  title: "Andreas Schellekens | Portfolio",
+  description: "Interactive portfolio experience by Andreas Schellekens",
 };
 
 export default function RootLayout({
@@ -36,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="nl"
-      className={`${spaceGrotesk.variable} ${jetBrainsMono.variable} h-full antialiased`}
+      className={`${syne.variable} ${ibmPlexMono.variable} h-full antialiased`}
       style={
         {
           "--color-bg": palette.bg,

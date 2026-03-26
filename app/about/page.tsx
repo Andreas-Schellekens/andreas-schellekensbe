@@ -1,8 +1,10 @@
 "use client";
 
+import { motion, useMotionValue } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { type PointerEvent } from "react";
+import ReactiveBackdrop from "../components/portfolio/reactive-backdrop";
 import { useLanguage } from "../components/language-provider";
 
 const cvPdfPath = "/cv/CV_Andreas_Schellekens.pdf";
@@ -152,76 +154,121 @@ export default function AboutPage() {
   const { language } = useLanguage();
   const t = content[language];
 
-  return (
-    <div className="relative min-h-screen overflow-x-clip bg-[var(--color-bg)] text-slate-100">
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="ambient-orb ambient-orb--one" />
-        <div className="ambient-orb ambient-orb--two" />
-        <div className="ambient-orb ambient-orb--three" />
-        <div className="ambient-grid" />
-      </div>
+  const cursorX = useMotionValue(50);
+  const cursorY = useMotionValue(50);
 
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 py-12 sm:py-16">
-        <section className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="reveal-item space-y-4" style={{ "--reveal-delay": "120ms" } as CSSProperties}>
-            <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_72%,transparent)] px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--color-accent)]">
-              <span className="inline-flex h-2 w-2 rounded-full bg-[var(--color-highlight)] pulse-dot" />
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const x = (event.clientX / window.innerWidth) * 100;
+    const y = (event.clientY / window.innerHeight) * 100;
+    cursorX.set(x);
+    cursorY.set(y);
+  };
+
+  const resetCursorPosition = () => {
+    cursorX.set(50);
+    cursorY.set(50);
+  };
+
+  return (
+    <div className="portfolio-root" onPointerMove={handlePointerMove} onPointerLeave={resetCursorPosition}>
+      <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
+
+      <main className="portfolio-main">
+        <section className="portfolio-section grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="hero-pill">
+              <span className="hero-pill-dot" />
               {t.badge}
             </p>
-            <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">{t.title}</h1>
-            <p className="max-w-2xl text-lg leading-relaxed text-slate-300">{t.intro}</p>
-          </div>
+            <h1 className="portfolio-section-title">{t.title}</h1>
+            <p className="portfolio-section-subtitle text-base">{t.intro}</p>
+          </motion.div>
 
-          <div className="reveal-item mx-auto w-full max-w-sm" style={{ "--reveal-delay": "220ms" } as CSSProperties}>
-            <div className="profile-shell">
-              <Image
-                src="/andreas.png"
-                alt="Andreas profile photo"
-                width={420}
-                height={460}
-                unoptimized
-                className="h-full w-full object-cover"
-              />
+          <motion.div
+            className="mx-auto w-full max-w-sm"
+            initial={{ opacity: 0, y: 18, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: 0.08, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="hero-portrait-card">
+              <div className="hero-portrait-image-shell">
+                <Image
+                  src="/andreas.png"
+                  alt="Andreas profile photo"
+                  width={420}
+                  height={460}
+                  unoptimized
+                  className="h-full w-full object-cover"
+                />
+              </div>
             </div>
-          </div>
+          </motion.div>
         </section>
 
-        <section className="space-y-6">
-          <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.timelineTitle}</h2>
+        <section className="portfolio-section space-y-6">
+          <motion.h2
+            className="portfolio-section-title"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {t.timelineTitle}
+          </motion.h2>
+
           <div className="relative">
             <div className="pointer-events-none absolute bottom-0 left-4 top-2 w-px bg-gradient-to-b from-[var(--color-accent)] via-[var(--color-surface)] to-transparent sm:left-1/2 sm:-translate-x-1/2" />
             <ol className="space-y-8">
               {t.timeline.map((item, index) => (
-                <li
-                  key={item.year}
-                  className="relative"
-                  style={{ "--reveal-delay": `${220 + index * 120}ms` } as CSSProperties}
-                >
+                <li key={item.year} className="relative">
                   <span className="pulse-dot absolute left-4 top-8 z-10 h-3 w-3 -translate-x-1/2 rounded-full bg-[var(--color-accent)] shadow-[0_0_0_6px_color-mix(in_srgb,var(--color-accent)_20%,transparent)] sm:left-1/2 sm:-translate-x-1/2" />
-                  <article
-                    className={`glass-panel reveal-item ml-10 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-accent)] sm:ml-0 sm:w-[calc(50%-1.5rem)] ${
+                  <motion.article
+                    className={`trajectory-card ml-10 sm:ml-0 sm:w-[calc(50%-1.5rem)] ${
                       index % 2 === 0 ? "sm:mr-auto" : "sm:ml-auto"
                     }`}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.35 }}
+                    transition={{
+                      delay: index * 0.08,
+                      duration: 0.56,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
                   >
-                    <p className="text-xs uppercase tracking-[0.18em] text-[var(--color-accent)]">
-                      {item.year}
-                    </p>
-                    <h3 className="mt-2 text-2xl font-semibold text-white">{item.title}</h3>
-                    <p className="mt-3 leading-relaxed text-slate-300">{item.description}</p>
-                  </article>
+                    <p className="trajectory-card-metric">{item.year}</p>
+                    <h3 className="trajectory-card-title">{item.title}</h3>
+                    <p className="trajectory-card-body">{item.description}</p>
+                  </motion.article>
                 </li>
               ))}
             </ol>
           </div>
         </section>
 
-        <section className="grid gap-5 lg:grid-cols-2">
-          <article className="glass-panel reveal-item rounded-2xl p-6" style={{ "--reveal-delay": "300ms" } as CSSProperties}>
+        <section className="portfolio-section grid gap-5 lg:grid-cols-2">
+          <motion.article
+            className="trajectory-card"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
             <h2 className="text-2xl font-semibold text-white">{t.studyChoiceTitle}</h2>
             <p className="mt-3 leading-relaxed text-slate-300">{t.studyChoiceBody}</p>
-          </article>
+          </motion.article>
 
-          <article className="glass-panel reveal-item rounded-2xl p-6" style={{ "--reveal-delay": "360ms" } as CSSProperties}>
+          <motion.article
+            className="trajectory-card"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ delay: 0.05, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          >
             <h2 className="text-2xl font-semibold text-white">{t.ambitionsTitle}</h2>
             <ul className="mt-3 space-y-2 text-slate-300">
               {t.ambitions.map((ambition) => (
@@ -231,30 +278,46 @@ export default function AboutPage() {
                 </li>
               ))}
             </ul>
-          </article>
+          </motion.article>
         </section>
 
-        <section className="glass-panel reveal-item rounded-3xl p-6 sm:p-8" style={{ "--reveal-delay": "420ms" } as CSSProperties}>
-          <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.cvTitle}</h2>
-          <p className="mt-3 text-slate-300">{t.cvBody}</p>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <Link href="/cv" className="primary-btn">
+        <motion.section
+          className="portfolio-contact-card"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="portfolio-contact-title text-3xl">{t.cvTitle}</h2>
+          <p className="portfolio-contact-body">{t.cvBody}</p>
+          <div className="portfolio-contact-actions mt-5 flex flex-wrap items-center gap-3">
+            <Link href="/cv" className="portfolio-btn-primary portfolio-action-link" prefetch={false}>
               {t.cvView}
             </Link>
-            <a href={cvPdfPath} download="CV_Andreas_Schellekens.pdf" className="ghost-btn">
+            <a
+              href={cvPdfPath}
+              download="CV_Andreas_Schellekens.pdf"
+              className="portfolio-btn-secondary portfolio-action-link"
+            >
               {t.cvDownload}
             </a>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="space-y-5">
+        <section className="portfolio-section space-y-5">
           <div>
-            <h2 className="text-2xl font-semibold text-white sm:text-3xl">{t.skillsTitle}</h2>
-            <p className="mt-2 text-slate-300">{t.skillsSubtitle}</p>
+            <h2 className="portfolio-section-title">{t.skillsTitle}</h2>
+            <p className="portfolio-section-subtitle mt-2">{t.skillsSubtitle}</p>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <article className="glass-panel reveal-item rounded-2xl p-6" style={{ "--reveal-delay": "480ms" } as CSSProperties}>
+            <motion.article
+              className="trajectory-card"
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+            >
               <h3 className="text-xl font-semibold text-white">{t.technicalTitle}</h3>
               <ul className="mt-3 space-y-2 text-slate-300">
                 {t.technicalSkills.map((skill) => (
@@ -264,9 +327,15 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-            </article>
+            </motion.article>
 
-            <article className="glass-panel reveal-item rounded-2xl p-6" style={{ "--reveal-delay": "540ms" } as CSSProperties}>
+            <motion.article
+              className="trajectory-card"
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ delay: 0.04, duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+            >
               <h3 className="text-xl font-semibold text-white">{t.toolsTitle}</h3>
               <ul className="mt-3 space-y-2 text-slate-300">
                 {t.toolSkills.map((skill) => (
@@ -276,9 +345,15 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-            </article>
+            </motion.article>
 
-            <article className="glass-panel reveal-item rounded-2xl p-6" style={{ "--reveal-delay": "600ms" } as CSSProperties}>
+            <motion.article
+              className="trajectory-card"
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ delay: 0.08, duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+            >
               <h3 className="text-xl font-semibold text-white">{t.softTitle}</h3>
               <ul className="mt-3 space-y-2 text-slate-300">
                 {t.softSkills.map((skill) => (
@@ -288,9 +363,15 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-            </article>
+            </motion.article>
 
-            <article className="glass-panel reveal-item rounded-2xl p-6" style={{ "--reveal-delay": "660ms" } as CSSProperties}>
+            <motion.article
+              className="trajectory-card"
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ delay: 0.12, duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+            >
               <h3 className="text-xl font-semibold text-white">{t.otherTitle}</h3>
               <ul className="mt-3 space-y-2 text-slate-300">
                 {t.otherItems.map((item) => (
@@ -300,7 +381,7 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-            </article>
+            </motion.article>
           </div>
         </section>
       </main>

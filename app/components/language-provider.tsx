@@ -14,15 +14,14 @@ const STORAGE_KEY = "site-language";
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("nl");
-
-  useEffect(() => {
-    const storedLanguage = window.localStorage.getItem(STORAGE_KEY);
-
-    if (storedLanguage === "nl" || storedLanguage === "en") {
-      setLanguage(storedLanguage);
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === "undefined") {
+      return "nl";
     }
-  }, []);
+
+    const storedLanguage = window.localStorage.getItem(STORAGE_KEY);
+    return storedLanguage === "nl" || storedLanguage === "en" ? storedLanguage : "nl";
+  });
 
   useEffect(() => {
     document.documentElement.lang = language;

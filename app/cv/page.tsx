@@ -1,6 +1,8 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { motion, useMotionValue } from "framer-motion";
+import { type PointerEvent } from "react";
+import ReactiveBackdrop from "../components/portfolio/reactive-backdrop";
 import { useLanguage } from "../components/language-provider";
 
 const cvPdfPath = "/cv/CV_Andreas_Schellekens.pdf";
@@ -24,35 +26,56 @@ export default function CvPage() {
   const { language } = useLanguage();
   const t = content[language];
 
-  return (
-    <div className="relative min-h-screen overflow-x-clip bg-[var(--color-bg)] text-slate-100">
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="ambient-orb ambient-orb--one" />
-        <div className="ambient-orb ambient-orb--two" />
-        <div className="ambient-orb ambient-orb--three" />
-        <div className="ambient-grid" />
-      </div>
+  const cursorX = useMotionValue(50);
+  const cursorY = useMotionValue(50);
 
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-12 sm:py-16">
-        <section className="reveal-item space-y-3" style={{ "--reveal-delay": "120ms" } as CSSProperties}>
-          <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-surface)] bg-[color-mix(in_srgb,var(--color-layer)_72%,transparent)] px-4 py-2 text-xs uppercase tracking-[0.18em] text-[var(--color-accent)]">
-            <span className="inline-flex h-2 w-2 rounded-full bg-[var(--color-highlight)] pulse-dot" />
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const x = (event.clientX / window.innerWidth) * 100;
+    const y = (event.clientY / window.innerHeight) * 100;
+    cursorX.set(x);
+    cursorY.set(y);
+  };
+
+  const resetCursorPosition = () => {
+    cursorX.set(50);
+    cursorY.set(50);
+  };
+
+  return (
+    <div className="portfolio-root" onPointerMove={handlePointerMove} onPointerLeave={resetCursorPosition}>
+      <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
+
+      <main className="portfolio-main">
+        <motion.section
+          className="portfolio-section space-y-3"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="hero-pill">
+            <span className="hero-pill-dot" />
             {t.badge}
           </p>
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">{t.title}</h1>
-          <p className="max-w-3xl text-slate-300">{t.intro}</p>
-          <a href={cvPdfPath} download="CV_Andreas_Schellekens.pdf" className="ghost-btn w-fit">
+          <h1 className="portfolio-section-title">{t.title}</h1>
+          <p className="portfolio-section-subtitle">{t.intro}</p>
+          <a href={cvPdfPath} download="CV_Andreas_Schellekens.pdf" className="portfolio-btn-secondary w-fit">
             {t.download}
           </a>
-        </section>
+        </motion.section>
 
-        <section className="glass-panel reveal-item overflow-hidden rounded-3xl p-4 sm:p-6" style={{ "--reveal-delay": "220ms" } as CSSProperties}>
+        <motion.section
+          className="portfolio-contact-card overflow-hidden p-4 sm:p-6"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        >
           <iframe
             src={cvPdfPath}
             title="CV PDF preview"
             className="h-[72vh] w-full rounded-2xl border border-[var(--color-surface)] bg-white"
           />
-        </section>
+        </motion.section>
       </main>
     </div>
   );
