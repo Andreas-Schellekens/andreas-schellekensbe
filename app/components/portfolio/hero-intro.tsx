@@ -59,16 +59,6 @@ export default function HeroIntro({ hero, contactEmail }: HeroIntroProps) {
   return (
     <section id="intro" className="portfolio-hero grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
       <div className="space-y-8">
-        <motion.p
-          className="hero-pill"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <span className="hero-pill-dot" />
-          {hero.availability}
-        </motion.p>
-
         <motion.div
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
@@ -137,10 +127,6 @@ export default function HeroIntro({ hero, contactEmail }: HeroIntroProps) {
               unoptimized
               className="h-full w-full object-cover"
             />
-          </div>
-          <div className="hero-portrait-meta">
-            <p className="hero-portrait-meta-label">{hero.statLabel}</p>
-            <p className="hero-portrait-meta-value">{hero.statValue}</p>
           </div>
         </article>
       </motion.div>

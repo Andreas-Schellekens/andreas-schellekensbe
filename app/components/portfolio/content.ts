@@ -60,23 +60,6 @@ export type PortfolioLocale = {
     githubLabel: string;
     githubUrl: string;
     githubName: string;
-    form: {
-      steps: [string, string, string];
-      nameLabel: string;
-      namePlaceholder: string;
-      senderEmailLabel: string;
-      senderEmailPlaceholder: string;
-      subjectLabel: string;
-      subjectPlaceholder: string;
-      messageLabel: string;
-      messagePlaceholder: string;
-      reviewTitle: string;
-      backLabel: string;
-      nextLabel: string;
-      sendLabel: string;
-      requiredError: string;
-      invalidEmailError: string;
-    };
     footer: string;
   };
 };
@@ -135,10 +118,10 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ],
     },
     projects: {
-      title: "Immersive Project Stage",
-      subtitle: "Hover een kaart om de preview te activeren",
+      title: "Project Stage",
+      subtitle: "Mijn uitgelichte projecten.",
       openLabel: "Open project",
-      hoverLabel: "Live preview",
+      hoverLabel: "Preview",
       items: [
         {
           title: "Binderbase",
@@ -184,23 +167,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       githubLabel: "GitHub",
       githubUrl: "https://github.com/Andreas-Schellekens",
       githubName: "Andreas-Schellekens",
-      form: {
-        steps: ["Jouw gegevens", "Projectdetails", "Verzenden"],
-        nameLabel: "Naam",
-        namePlaceholder: "Je naam",
-        senderEmailLabel: "Jouw e-mail",
-        senderEmailPlaceholder: "naam@email.com",
-        subjectLabel: "Onderwerp",
-        subjectPlaceholder: "Waar wil je aan werken?",
-        messageLabel: "Bericht",
-        messagePlaceholder: "Vertel kort over je project, timing en doelen.",
-        reviewTitle: "Controleer je aanvraag",
-        backLabel: "Vorige",
-        nextLabel: "Volgende",
-        sendLabel: "Open e-mail en verstuur",
-        requiredError: "Vul alle verplichte velden in om verder te gaan.",
-        invalidEmailError: "Voer een geldig e-mailadres in.",
-      },
       footer: "Ontworpen en ontwikkeld met focus op beleving en details.",
     },
   },
@@ -257,10 +223,10 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ],
     },
     projects: {
-      title: "Immersive Project Stage",
-      subtitle: "Hover a card to activate its preview",
+      title: "Project Stage",
+      subtitle: "My featured projects.",
       openLabel: "Open project",
-      hoverLabel: "Live preview",
+      hoverLabel: "Preview",
       items: [
         {
           title: "Binderbase",
@@ -306,23 +272,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       githubLabel: "GitHub",
       githubUrl: "https://github.com/Andreas-Schellekens",
       githubName: "Andreas-Schellekens",
-      form: {
-        steps: ["Your details", "Project details", "Send"],
-        nameLabel: "Name",
-        namePlaceholder: "Your name",
-        senderEmailLabel: "Your email",
-        senderEmailPlaceholder: "name@email.com",
-        subjectLabel: "Subject",
-        subjectPlaceholder: "What do you want to build?",
-        messageLabel: "Message",
-        messagePlaceholder: "Share your project goals, scope, and timeline.",
-        reviewTitle: "Review your request",
-        backLabel: "Back",
-        nextLabel: "Next",
-        sendLabel: "Open email and send",
-        requiredError: "Please fill in all required fields before continuing.",
-        invalidEmailError: "Please enter a valid email address.",
-      },
       footer: "Designed and developed with a strong focus on experience and details.",
     },
   },

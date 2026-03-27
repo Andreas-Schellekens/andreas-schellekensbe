@@ -3,6 +3,7 @@
 import { motion, useMotionValue } from "framer-motion";
 import { type PointerEvent } from "react";
 import { useLanguage } from "../language-provider";
+import BorderGlow from "@/components/BorderGlow";
 import ContactDock from "./contact-dock";
 import { portfolioContent } from "./content";
 import HeroIntro from "./hero-intro";
@@ -91,19 +92,34 @@ export default function PortfolioExperience() {
 
           <div className="trajectory-grid">
             {t.trajectory.cards.map((card, index) => (
-              <motion.article
+              <motion.div
                 key={card.title}
-                className={`trajectory-card ${index === 1 ? "trajectory-card-middle" : ""}`}
+                className={index === 1 ? "trajectory-card-middle" : ""}
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.35 }}
                 custom={index}
               >
-                <p className="trajectory-card-metric">{card.metric}</p>
-                <h3 className="trajectory-card-title">{card.title}</h3>
-                <p className="trajectory-card-body">{card.body}</p>
-              </motion.article>
+                <BorderGlow
+                  className="trajectory-border-glow"
+                  borderRadius={18}
+                  glowRadius={30}
+                  glowIntensity={0.82}
+                  glowColor="214 88 72"
+                  colors={["#96BCFF", "#4F73CD", "#FDA481"]}
+                  backgroundColor="#152340"
+                  fillOpacity={0.34}
+                  edgeSensitivity={24}
+                  coneSpread={24}
+                >
+                  <article className="trajectory-card">
+                    <p className="trajectory-card-metric">{card.metric}</p>
+                    <h3 className="trajectory-card-title">{card.title}</h3>
+                    <p className="trajectory-card-body">{card.body}</p>
+                  </article>
+                </BorderGlow>
+              </motion.div>
             ))}
           </div>
         </section>

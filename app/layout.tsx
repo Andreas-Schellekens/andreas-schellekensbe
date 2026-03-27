@@ -30,6 +30,10 @@ const palette = {
 export const metadata: Metadata = {
   title: "Andreas Schellekens | Portfolio",
   description: "Interactive portfolio experience by Andreas Schellekens",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    shortcut: ["/icon.svg"],
+  },
 };
 
 export default function RootLayout({
