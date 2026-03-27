@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "./language-provider";
@@ -30,65 +31,91 @@ const labels = {
 export default function SiteHeader() {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = labels[language];
   const projectsHref = pathname === "/" ? "#projects" : "/#projects";
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  const navItems = [
+    { href: "/", label: t.home, isActive: pathname === "/", external: false },
+    { href: "/about", label: t.about, isActive: pathname.startsWith("/about"), external: false },
+    { href: projectsHref, label: t.projects, isActive: false, external: false },
+    { href: "mailto:andreas.schellekens8@gmail.com", label: t.contact, isActive: false, external: true },
+  ] as const;
+
   return (
-    <header className="site-header sticky top-0 z-50">
-      <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 pr-28 sm:px-6 sm:pr-36">
-        <Link href="/" className="site-brand">
+    <header className="site-header fixed inset-x-0 top-0 z-50 sm:sticky">
+      <nav className="site-nav mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:flex-nowrap sm:px-6">
+        <Link href="/" className="site-brand" onClick={() => setIsMobileMenuOpen(false)}>
           {t.brand}
         </Link>
 
-        <div className="site-lang-corner flex items-center gap-2">
-          <span className="hidden text-[10px] uppercase tracking-[0.18em] text-slate-400 sm:inline">
-            {t.languageLabel}
-          </span>
-          <div className="site-toggle">
-            <button
-              type="button"
-              onClick={() => setLanguage("nl")}
-              className={`site-toggle-btn ${language === "nl" ? "site-toggle-btn-active" : ""}`}
-              aria-pressed={language === "nl"}
-            >
-              {t.dutch}
-            </button>
-            <button
-              type="button"
-              onClick={() => setLanguage("en")}
-              className={`site-toggle-btn ${language === "en" ? "site-toggle-btn-active" : ""}`}
-              aria-pressed={language === "en"}
-            >
-              {t.english}
-            </button>
+        <button
+          type="button"
+          className="site-menu-btn sm:hidden"
+          onClick={() => setIsMobileMenuOpen((current) => !current)}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="site-mobile-menu"
+          aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+        >
+          <span className={`site-menu-btn-line ${isMobileMenuOpen ? "site-menu-btn-line-top-open" : ""}`} />
+          <span className={`site-menu-btn-line ${isMobileMenuOpen ? "site-menu-btn-line-middle-open" : ""}`} />
+          <span className={`site-menu-btn-line ${isMobileMenuOpen ? "site-menu-btn-line-bottom-open" : ""}`} />
+        </button>
+
+        <div
+          id="site-mobile-menu"
+          className={`site-menu-panel ${isMobileMenuOpen ? "site-menu-panel-open" : ""} sm:flex sm:w-auto sm:flex-row sm:items-center sm:gap-3`}
+        >
+          <ul className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                {item.external ? (
+                  <a
+                    href={item.href}
+                    className={`site-nav-link ${item.isActive ? "site-nav-link-active" : ""}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className={`site-nav-link ${item.isActive ? "site-nav-link-active" : ""}`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          <div className="site-lang-corner">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{t.languageLabel}</span>
+            <div className="site-toggle">
+              <button
+                type="button"
+                onClick={() => setLanguage("nl")}
+                className={`site-toggle-btn ${language === "nl" ? "site-toggle-btn-active" : ""}`}
+                aria-pressed={language === "nl"}
+              >
+                {t.dutch}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage("en")}
+                className={`site-toggle-btn ${language === "en" ? "site-toggle-btn-active" : ""}`}
+                aria-pressed={language === "en"}
+              >
+                {t.english}
+              </button>
+            </div>
           </div>
         </div>
-
-        <ul className="order-3 flex w-full items-center justify-center gap-1 pt-1 sm:order-none sm:w-auto sm:pt-0">
-          <li>
-            <Link href="/" className={`site-nav-link ${pathname === "/" ? "site-nav-link-active" : ""}`}>
-              {t.home}
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/about"
-              className={`site-nav-link ${pathname.startsWith("/about") ? "site-nav-link-active" : ""}`}
-            >
-              {t.about}
-            </Link>
-          </li>
-          <li>
-            <Link href={projectsHref} className="site-nav-link">
-              {t.projects}
-            </Link>
-          </li>
-          <li>
-            <a href="mailto:andreas.schellekens8@gmail.com" className="site-nav-link">
-              {t.contact}
-            </a>
-          </li>
-        </ul>
       </nav>
     </header>
   );

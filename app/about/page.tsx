@@ -174,7 +174,7 @@ export default function AboutPage() {
       <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
 
       <main className="portfolio-main">
-        <section className="portfolio-section grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+        <section className="portfolio-section grid items-center gap-6 md:gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <motion.div
             className="space-y-4"
             initial={{ opacity: 0, y: 18 }}
@@ -291,13 +291,17 @@ export default function AboutPage() {
           <h2 className="portfolio-contact-title text-3xl">{t.cvTitle}</h2>
           <p className="portfolio-contact-body">{t.cvBody}</p>
           <div className="portfolio-contact-actions mt-5 flex flex-wrap items-center gap-3">
-            <Link href="/cv" className="portfolio-btn-primary portfolio-action-link" prefetch={false}>
+            <Link
+              href="/cv"
+              className="portfolio-btn-primary portfolio-action-link w-full justify-center sm:w-auto"
+              prefetch={false}
+            >
               {t.cvView}
             </Link>
             <a
               href={cvPdfPath}
               download="CV_Andreas_Schellekens.pdf"
-              className="portfolio-btn-secondary portfolio-action-link"
+              className="portfolio-btn-secondary portfolio-action-link w-full justify-center sm:w-auto"
             >
               {t.cvDownload}
             </a>

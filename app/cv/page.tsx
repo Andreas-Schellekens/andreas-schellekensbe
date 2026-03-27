@@ -58,13 +58,13 @@ export default function CvPage() {
           </p>
           <h1 className="portfolio-section-title">{t.title}</h1>
           <p className="portfolio-section-subtitle">{t.intro}</p>
-          <a href={cvPdfPath} download="CV_Andreas_Schellekens.pdf" className="portfolio-btn-secondary w-fit">
+          <a href={cvPdfPath} download="CV_Andreas_Schellekens.pdf" className="portfolio-btn-secondary w-full justify-center sm:w-fit">
             {t.download}
           </a>
         </motion.section>
 
         <motion.section
-          className="portfolio-contact-card overflow-hidden p-4 sm:p-6"
+          className="portfolio-contact-card overflow-hidden p-3 sm:p-6"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -73,7 +73,7 @@ export default function CvPage() {
           <iframe
             src={cvPdfPath}
             title="CV PDF preview"
-            className="h-[72vh] w-full rounded-2xl border border-[var(--color-surface)] bg-white"
+            className="h-[58vh] min-h-[18rem] w-full rounded-2xl border border-[var(--color-surface)] bg-white sm:h-[72vh]"
           />
         </motion.section>
       </main>

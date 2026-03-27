@@ -728,6 +728,54 @@ body {
   }
 }
 
+@media (max-width: 767px) {
+  html {
+    scroll-padding-top: 4.8rem;
+  }
+
+  .portfolio-root {
+    padding-top: 6.1rem;
+  }
+
+  .portfolio-main {
+    gap: 3.4rem;
+    padding-bottom: 4.2rem;
+    padding-top: 1rem;
+  }
+
+  .portfolio-hero {
+    min-height: auto;
+    gap: 1.8rem;
+    align-items: start;
+  }
+
+  .hero-title {
+    max-width: 16ch;
+  }
+
+  .hero-intro {
+    max-width: 100%;
+  }
+
+  .hero-portrait-wrapper {
+    margin-inline: auto;
+    width: min(100%, 22rem);
+  }
+
+  .project-stage-preview {
+    min-height: 11.6rem;
+  }
+
+  .contact-dock {
+    width: min(100%, 20rem);
+    justify-content: center;
+  }
+
+  .contact-dock-tooltip {
+    display: none;
+  }
+}
+
 .glass-panel {
   border: 1px solid color-mix(in srgb, var(--color-surface) 78%, transparent);
   background: color-mix(in srgb, var(--color-layer) 68%, transparent);
@@ -735,21 +783,29 @@ body {
 }
 
 .site-header {
+  --site-header-bg: #181a2f;
   border-bottom: 1px solid color-mix(in srgb, var(--color-surface) 72%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 84%, transparent);
+  background: var(--site-header-bg);
   backdrop-filter: blur(14px);
 }
 
+.site-nav {
+  position: relative;
+}
+
 .site-lang-corner {
-  position: absolute;
-  top: 0.55rem;
-  right: 1rem;
-  z-index: 2;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin-left: 0;
 }
 
 @media (min-width: 640px) {
   .site-lang-corner {
-    right: 1.5rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 
@@ -803,6 +859,70 @@ body {
   color: var(--color-accent);
 }
 
+.site-menu-btn {
+  display: inline-flex;
+  width: 2.35rem;
+  height: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.28rem;
+  border-radius: 0.72rem;
+  border: 1px solid color-mix(in srgb, var(--color-surface) 78%, transparent);
+  background: color-mix(in srgb, var(--color-layer) 62%, transparent);
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.site-menu-btn:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+}
+
+.site-menu-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.site-menu-btn-line {
+  width: 1rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  transition: transform 220ms ease, opacity 220ms ease;
+  transform-origin: center;
+}
+
+.site-menu-btn-line-top-open {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.site-menu-btn-line-middle-open {
+  opacity: 0;
+}
+
+.site-menu-btn-line-bottom-open {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+.site-menu-panel {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .site-menu-btn {
+    display: none;
+  }
+
+  .site-menu-panel {
+    display: flex;
+    position: static;
+    width: auto;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
 .site-toggle {
   display: inline-flex;
   align-items: center;
@@ -829,6 +949,66 @@ body {
 .site-toggle-btn-active {
   background: var(--color-accent);
   color: var(--color-bg);
+}
+
+@media (max-width: 639px) {
+  .site-menu-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 0.45rem);
+    z-index: 60;
+    display: none;
+    border-radius: 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--color-surface) 72%, transparent);
+    background: var(--site-header-bg);
+    padding: 0.7rem 0.95rem 0.9rem;
+    box-shadow: 0 18px 32px color-mix(in srgb, #020617 44%, transparent);
+  }
+
+  .site-menu-panel-open {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .site-brand {
+    max-width: calc(100% - 8.5rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    letter-spacing: 0.07em;
+  }
+
+  .site-nav-link {
+    width: 100%;
+    border-radius: 0.45rem;
+    padding: 0.48rem 0.4rem;
+  }
+
+  .site-nav-link::after {
+    left: 0.4rem;
+    right: 0.4rem;
+  }
+
+  .site-lang-corner {
+    width: 100%;
+    border-top: 1px solid color-mix(in srgb, var(--color-surface) 72%, transparent);
+    padding-top: 0.7rem;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 930px) {
+  .site-nav-link {
+    padding-inline: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .site-toggle-btn {
+    padding-inline: 0.45rem;
+    font-size: 0.68rem;
+  }
 }
 
 .primary-btn {
