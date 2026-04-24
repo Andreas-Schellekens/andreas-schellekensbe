@@ -52,6 +52,7 @@ export type PortfolioLocale = {
   contact: {
     title: string;
     body: string;
+    formLabel: string;
     emailLabel: string;
     email: string;
     linkedinLabel: string;
@@ -159,6 +160,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
     contact: {
       title: "Build Something Memorable",
       body: "Heb je een idee dat meer moet voelen als een product dan een klassieke website? Laten we praten.",
+      formLabel: "Contactformulier",
       emailLabel: "Direct email",
       email: "andreas.schellekens8@gmail.com",
       linkedinLabel: "LinkedIn",
@@ -264,6 +266,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
     contact: {
       title: "Build Something Memorable",
       body: "If your idea should feel more like a product than a typical website, let us talk.",
+      formLabel: "Contact form",
       emailLabel: "Direct email",
       email: "andreas.schellekens8@gmail.com",
       linkedinLabel: "LinkedIn",

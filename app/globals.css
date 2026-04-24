@@ -626,6 +626,72 @@ body {
   line-height: 1.68;
 }
 
+.contact-form {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.contact-form-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.contact-form-label {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #93c5fd 74%, transparent);
+}
+
+.contact-form-input,
+.contact-form-textarea {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
+  background: color-mix(in srgb, var(--color-layer) 58%, transparent);
+  color: #f8fafc;
+  padding: 0.72rem 0.86rem;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.contact-form-input::placeholder,
+.contact-form-textarea::placeholder {
+  color: color-mix(in srgb, #dbeafe 45%, transparent);
+}
+
+.contact-form-input:focus-visible,
+.contact-form-textarea:focus-visible {
+  outline: none;
+  border-color: color-mix(in srgb, var(--color-accent) 82%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.contact-form-textarea {
+  resize: vertical;
+  min-height: 9.5rem;
+}
+
+.contact-form-message {
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.contact-form-message-idle {
+  color: color-mix(in srgb, #dbeafe 72%, transparent);
+}
+
+.contact-form-message-success {
+  color: color-mix(in srgb, #93f9c7 86%, transparent);
+}
+
+.contact-form-message-error {
+  color: color-mix(in srgb, #fd9b9b 88%, transparent);
+}
+
 .contact-dock-shell {
   margin-top: 1.18rem;
   display: flex;

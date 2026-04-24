@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "./language-provider";
@@ -35,15 +35,11 @@ export default function SiteHeader() {
   const t = labels[language];
   const projectsHref = pathname === "/" ? "#projects" : "/#projects";
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-
   const navItems = [
-    { href: "/", label: t.home, isActive: pathname === "/", external: false },
-    { href: "/about", label: t.about, isActive: pathname.startsWith("/about"), external: false },
-    { href: projectsHref, label: t.projects, isActive: false, external: false },
-    { href: "mailto:andreas.schellekens8@gmail.com", label: t.contact, isActive: false, external: true },
+    { href: "/", label: t.home, isActive: pathname === "/" },
+    { href: "/about", label: t.about, isActive: pathname.startsWith("/about") },
+    { href: projectsHref, label: t.projects, isActive: false },
+    { href: "/contact", label: t.contact, isActive: pathname.startsWith("/contact") },
   ] as const;
 
   return (
@@ -73,23 +69,13 @@ export default function SiteHeader() {
           <ul className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center">
             {navItems.map((item) => (
               <li key={item.href}>
-                {item.external ? (
-                  <a
-                    href={item.href}
-                    className={`site-nav-link ${item.isActive ? "site-nav-link-active" : ""}`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className={`site-nav-link ${item.isActive ? "site-nav-link-active" : ""}`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                )}
+                <Link
+                  href={item.href}
+                  className={`site-nav-link ${item.isActive ? "site-nav-link-active" : ""}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
               </li>
             ))}
           </ul>

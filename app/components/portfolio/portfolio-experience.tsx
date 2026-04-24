@@ -76,7 +76,7 @@ export default function PortfolioExperience() {
       <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
 
       <main className="portfolio-main">
-        <HeroIntro key={language} hero={t.hero} contactEmail={t.contact.email} />
+        <HeroIntro key={language} hero={t.hero} />
 
         <section id="trajectory" className="portfolio-section space-y-8">
           <motion.div
@@ -136,8 +136,8 @@ export default function PortfolioExperience() {
             <ContactDock
               items={[
                 {
-                  href: `mailto:${t.contact.email}`,
-                  label: t.contact.emailLabel,
+                  href: "/contact",
+                  label: t.contact.formLabel,
                   description: t.contact.email,
                   icon: <MailIcon className="contact-dock-icon" />,
                 },
