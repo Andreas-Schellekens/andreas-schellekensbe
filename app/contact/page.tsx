@@ -1,14 +1,27 @@
 "use client";
 
 import { motion, useMotionValue } from "framer-motion";
-import { useActionState, type PointerEvent } from "react";
+import { useState, type FormEvent, type PointerEvent } from "react";
 import ReactiveBackdrop from "../components/portfolio/reactive-backdrop";
 import { useLanguage } from "../components/language-provider";
-import { type ContactFormState, sendContactMessage } from "./actions";
 
 const CONTACT_EMAIL = "andreas.schellekens8@gmail.com";
+const FORM_SUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 const LINKEDIN_URL = "https://www.linkedin.com/in/andreas-schellekens/";
 const GITHUB_URL = "https://github.com/Andreas-Schellekens";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type ContactFormState = {
+  status: "idle" | "success" | "error";
+  reason?: "validation" | "activation" | "send";
+  providerMessage?: string;
+};
+
+type FormSubmitResult = {
+  success?: string | boolean;
+  message?: string;
+};
+
 const initialContactFormState: ContactFormState = { status: "idle" };
 
 const content = {
@@ -61,7 +74,8 @@ const content = {
 export default function ContactPage() {
   const { language } = useLanguage();
   const t = content[language];
-  const [state, formAction, pending] = useActionState(sendContactMessage, initialContactFormState);
+  const [state, setState] = useState(initialContactFormState);
+  const [pending, setPending] = useState(false);
 
   const cursorX = useMotionValue(50);
   const cursorY = useMotionValue(50);
@@ -76,6 +90,101 @@ export default function ContactPage() {
   const resetCursorPosition = () => {
     cursorX.set(50);
     cursorY.set(50);
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (pending) {
+      return;
+    }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const honeypotValue = formData.get("website");
+    if (typeof honeypotValue === "string" && honeypotValue.trim().length > 0) {
+      setState({ status: "success" });
+      form.reset();
+      return;
+    }
+
+    const name = typeof formData.get("name") === "string" ? formData.get("name")?.toString().trim() ?? "" : "";
+    const email = typeof formData.get("email") === "string" ? formData.get("email")?.toString().trim() ?? "" : "";
+    const subject = typeof formData.get("subject") === "string" ? formData.get("subject")?.toString().trim() ?? "" : "";
+    const message = typeof formData.get("message") === "string" ? formData.get("message")?.toString().trim() ?? "" : "";
+
+    if (
+      name.length < 2 ||
+      name.length > 120 ||
+      !EMAIL_PATTERN.test(email) ||
+      subject.length < 2 ||
+      subject.length > 140 ||
+      message.length < 10 ||
+      message.length > 5000
+    ) {
+      setState({ status: "error", reason: "validation" });
+      return;
+    }
+
+    setPending(true);
+
+    try {
+      const response = await fetch(FORM_SUBMIT_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          subject,
+          message,
+          _subject: `Portfolio contact: ${subject}`,
+          _template: "table",
+          _captcha: "false",
+          _url: window.location.href,
+        }),
+      });
+
+      const rawBody = await response.text();
+      let parsed: FormSubmitResult | null = null;
+
+      try {
+        parsed = JSON.parse(rawBody) as FormSubmitResult;
+      } catch {
+        parsed = null;
+      }
+
+      if (!response.ok) {
+        setState({
+          status: "error",
+          reason: "send",
+          providerMessage: parsed?.message ?? `Request failed with status ${response.status}.`,
+        });
+        return;
+      }
+
+      const submitSucceeded = parsed?.success === true || parsed?.success === "true";
+      if (!submitSucceeded) {
+        const providerMessage = parsed?.message ?? "The email provider did not confirm delivery.";
+        const activationNeeded = /activat/i.test(providerMessage);
+
+        setState({
+          status: "error",
+          reason: activationNeeded ? "activation" : "send",
+          providerMessage,
+        });
+        return;
+      }
+
+      setState({ status: "success" });
+      form.reset();
+    } catch {
+      setState({ status: "error", reason: "send" });
+    } finally {
+      setPending(false);
+    }
   };
 
   const statusMessage =
@@ -126,7 +235,7 @@ export default function ContactPage() {
             <h2 className="portfolio-contact-title text-3xl">{t.formTitle}</h2>
             <p className="portfolio-contact-body">{t.formBody}</p>
 
-            <form action={formAction} className="contact-form">
+            <form onSubmit={handleSubmit} className="contact-form">
               <input type="text" name="website" tabIndex={-1} autoComplete="off" className="sr-only" />
 
               <label className="contact-form-field">
