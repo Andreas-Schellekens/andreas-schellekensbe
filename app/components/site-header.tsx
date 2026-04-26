@@ -33,12 +33,11 @@ export default function SiteHeader() {
   const { language, setLanguage } = useLanguage();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = labels[language];
-  const projectsHref = pathname === "/" ? "#projects" : "/#projects";
 
   const navItems = [
     { href: "/", label: t.home, isActive: pathname === "/" },
     { href: "/about", label: t.about, isActive: pathname.startsWith("/about") },
-    { href: projectsHref, label: t.projects, isActive: false },
+    { href: "/projects", label: t.projects, isActive: pathname.startsWith("/projects") },
     { href: "/contact", label: t.contact, isActive: pathname.startsWith("/contact") },
   ] as const;
 

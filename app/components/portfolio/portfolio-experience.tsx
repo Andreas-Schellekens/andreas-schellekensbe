@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useMotionValue } from "framer-motion";
 import { type PointerEvent } from "react";
 import { useLanguage } from "../language-provider";
@@ -7,7 +8,6 @@ import BorderGlow from "@/components/BorderGlow";
 import ContactDock from "./contact-dock";
 import { portfolioContent } from "./content";
 import HeroIntro from "./hero-intro";
-import ProjectStage from "./project-stage";
 import ReactiveBackdrop from "./reactive-backdrop";
 
 type IconProps = {
@@ -52,9 +52,23 @@ const cardVariants = {
   }),
 };
 
+const projectGatewayContent = {
+  nl: {
+    title: "Projecten op een aparte pagina",
+    body: "Ik heb mijn projecten verplaatst naar een dedicated pagina met interactieve scroll stack.",
+    cta: "Bekijk alle projecten",
+  },
+  en: {
+    title: "Projects on a separate page",
+    body: "I moved my projects to a dedicated page with an interactive scroll stack.",
+    cta: "View all projects",
+  },
+} as const;
+
 export default function PortfolioExperience() {
   const { language } = useLanguage();
   const t = portfolioContent[language];
+  const projectGateway = projectGatewayContent[language];
 
   const cursorX = useMotionValue(50);
   const cursorY = useMotionValue(50);
@@ -124,7 +138,23 @@ export default function PortfolioExperience() {
           </div>
         </section>
 
-        <ProjectStage projects={t.projects} />
+        <section id="projects" className="portfolio-section">
+          <motion.article
+            className="portfolio-contact-card projects-gateway-card"
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.32 }}
+            transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="portfolio-contact-title text-3xl">{projectGateway.title}</h2>
+            <p className="portfolio-contact-body">{projectGateway.body}</p>
+            <div className="portfolio-contact-actions mt-5">
+              <Link href="/projects" className="portfolio-btn-primary portfolio-action-link">
+                {projectGateway.cta}
+              </Link>
+            </div>
+          </motion.article>
+        </section>
 
         <section id="contact" className="portfolio-section">
           <motion.div

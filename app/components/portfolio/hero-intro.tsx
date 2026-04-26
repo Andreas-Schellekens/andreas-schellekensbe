@@ -92,9 +92,9 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
           <Link href="/contact" className="portfolio-btn-primary" data-cursor="interactive">
             {hero.ctaPrimary}
           </Link>
-          <a href="#projects" className="portfolio-btn-secondary" data-cursor="interactive">
+          <Link href="/projects" className="portfolio-btn-secondary" data-cursor="interactive">
             {hero.ctaSecondary}
-          </a>
+          </Link>
         </motion.div>
 
         <motion.ul
