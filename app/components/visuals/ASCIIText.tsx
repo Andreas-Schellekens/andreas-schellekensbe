@@ -50,6 +50,13 @@ const PX_RATIO = typeof window !== "undefined" ? window.devicePixelRatio : 1;
 const mapRange = (value: number, start: number, stop: number, start2: number, stop2: number) =>
   ((value - start) / (stop - start)) * (stop2 - start2) + start2;
 
+type AsciiFilterOptions = {
+  fontSize?: number;
+  fontFamily?: string;
+  charset?: string;
+  invert?: boolean;
+};
+
 class AsciiFilter {
   renderer: THREE.WebGLRenderer;
   domElement: HTMLDivElement;
@@ -68,7 +75,7 @@ class AsciiFilter {
   center = { x: 0, y: 0 };
   mouse = { x: 0, y: 0 };
 
-  constructor(renderer: THREE.WebGLRenderer, { fontSize, fontFamily, charset, invert } = {}) {
+  constructor(renderer: THREE.WebGLRenderer, { fontSize, fontFamily, charset, invert }: AsciiFilterOptions = {}) {
     this.renderer = renderer;
     this.domElement = document.createElement("div");
     this.domElement.className = styles.filter;
@@ -89,9 +96,6 @@ class AsciiFilter {
     this.charset =
       charset ?? " .'`^\",:;Il!i~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
 
-    this.context.webkitImageSmoothingEnabled = false;
-    this.context.mozImageSmoothingEnabled = false;
-    this.context.msImageSmoothingEnabled = false;
     this.context.imageSmoothingEnabled = false;
 
     this.onMouseMove = this.onMouseMove.bind(this);
@@ -489,7 +493,10 @@ export default function ASCIIText({
     };
 
     const setup = async () => {
-      const { width, height } = containerRef.current!.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!container) return;
+
+      const { width, height } = container.getBoundingClientRect();
 
       if (width === 0 || height === 0) {
         observer = new IntersectionObserver(
@@ -510,11 +517,11 @@ export default function ASCIIText({
           },
           { threshold: 0.1 }
         );
-        observer.observe(containerRef.current);
+        observer.observe(container);
         return;
       }
 
-      asciiRef.current = await createAndInit(containerRef.current!, width, height);
+      asciiRef.current = await createAndInit(container, width, height);
       if (!cancelled && asciiRef.current) {
         asciiRef.current.load();
 
@@ -525,7 +532,7 @@ export default function ASCIIText({
             asciiRef.current.setSize(entryWidth, entryHeight);
           }
         });
-        ro.observe(containerRef.current!);
+        ro.observe(container);
       }
     };
 
