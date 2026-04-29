@@ -97,18 +97,6 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
           </Link>
         </motion.div>
 
-        <motion.ul
-          className="flex flex-wrap items-center gap-2.5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.44, duration: 0.55 }}
-        >
-          {hero.badges.map((badge) => (
-            <li key={badge} className="hero-badge">
-              {badge}
-            </li>
-          ))}
-        </motion.ul>
       </div>
 
       <motion.div

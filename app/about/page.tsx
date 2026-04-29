@@ -15,7 +15,7 @@ const content = {
     title: "Wie ik ben",
     intro:
       "Ik ben Andreas, een student Toegepaste Informatica die energie krijgt van technologie met echte impact.",
-    timelineTitle: "Mijn traject",
+    timelineTitle: "Mijn voorlopig traject in IT",
     timeline: [
       {
         year: "Voor 2024",
@@ -84,7 +84,7 @@ const content = {
     title: "Who I am",
     intro:
       "I am Andreas, an Applied Computer Science student who enjoys building technology with real impact.",
-    timelineTitle: "My journey",
+    timelineTitle: "My journey in IT so far",
     timeline: [
       {
         year: "Before 2024",

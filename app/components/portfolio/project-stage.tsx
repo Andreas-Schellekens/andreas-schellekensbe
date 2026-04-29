@@ -53,72 +53,86 @@ export default function ProjectStage({ projects }: ProjectStageProps) {
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
       >
-        {projects.items.map((project) => (
-          <motion.div key={project.title} variants={itemVariants}>
-            <BorderGlow
-              className="project-stage-border-glow"
-              borderRadius={20}
-              glowRadius={34}
-              glowIntensity={0.9}
-              glowColor="214 88 72"
-              colors={["#9DC1FF", "#5A7BD2", "#FDA481"]}
-              backgroundColor="#151f3d"
-              fillOpacity={0.36}
-              edgeSensitivity={24}
-              coneSpread={25}
-            >
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="project-stage-card group"
-                data-cursor="interactive"
-              >
-                <div className="project-stage-preview bg-slate-900">
-                  <motion.div className="project-stage-preview-overlay" />
-                  <motion.div
-                    className="project-stage-scanline"
-                    animate={{ y: ["-105%", "105%"] }}
-                    transition={{
-                      duration: 3.8,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
+        {projects.items.map((project) => {
+          const cardContent = (
+            <>
+              <div className="project-stage-preview bg-slate-900">
+                <motion.div className="project-stage-preview-overlay" />
+                <motion.div
+                  className="project-stage-scanline"
+                  animate={{ y: ["-105%", "105%"] }}
+                  transition={{
+                    duration: 3.8,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+                <div className="project-stage-preview-image-wrap">
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} preview`}
+                    width={640}
+                    height={420}
+                    unoptimized
+                    className="h-full w-full object-cover object-top"
                   />
-                  <div className="project-stage-preview-image-wrap">
-                    <Image
-                      src={project.image}
-                      alt={`${project.title} preview`}
-                      width={640}
-                      height={420}
-                      unoptimized
-                      className="h-full w-full object-cover object-top"
-                    />
-                  </div>
-
-                  <div className="project-stage-status-row">
-                    <span>{project.year}</span>
-                    <span>{project.status}</span>
-                  </div>
-                  <span className="project-stage-hover-pill">{projects.hoverLabel}</span>
                 </div>
 
-                <div className="space-y-4 p-5">
-                  <h3 className="project-stage-title">{project.title}</h3>
-                  <p className="project-stage-description">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span key={`${project.title}-${tag}`} className="project-stage-tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <span className="project-stage-open-link">{projects.openLabel}</span>
+                <div className="project-stage-status-row">
+                  <span>{project.year}</span>
+                  <span>{project.status}</span>
                 </div>
-              </a>
-            </BorderGlow>
-          </motion.div>
-        ))}
+                <span className="project-stage-hover-pill">{projects.hoverLabel}</span>
+              </div>
+
+              <div className="space-y-4 p-5">
+                <h3 className="project-stage-title">{project.title}</h3>
+                <p className="project-stage-description">{project.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span key={`${project.title}-${tag}`} className="project-stage-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <span className={`project-stage-open-link ${project.url ? "" : "project-stage-open-link-muted"}`.trim()}>
+                  {project.url ? projects.openLabel : projects.noLinkLabel}
+                </span>
+              </div>
+            </>
+          );
+
+          return (
+            <motion.div key={project.title} variants={itemVariants}>
+              <BorderGlow
+                className="project-stage-border-glow"
+                borderRadius={20}
+                glowRadius={34}
+                glowIntensity={0.9}
+                glowColor="214 88 72"
+                colors={["#9DC1FF", "#5A7BD2", "#FDA481"]}
+                backgroundColor="#151f3d"
+                fillOpacity={0.36}
+                edgeSensitivity={24}
+                coneSpread={25}
+              >
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="project-stage-card group"
+                    data-cursor="interactive"
+                  >
+                    {cardContent}
+                  </a>
+                ) : (
+                  <article className="project-stage-card">{cardContent}</article>
+                )}
+              </BorderGlow>
+            </motion.div>
+          );
+        })}
       </motion.div>
     </section>
   );

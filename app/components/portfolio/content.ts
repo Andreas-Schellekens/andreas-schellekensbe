@@ -9,7 +9,7 @@ export type PortfolioProject = {
   tags: string[];
   image: string;
   imagePanelClass?: string;
-  url: string;
+  url?: string;
   status: string;
 };
 
@@ -46,6 +46,7 @@ export type PortfolioLocale = {
     title: string;
     subtitle: string;
     openLabel: string;
+    noLinkLabel: string;
     hoverLabel: string;
     items: PortfolioProject[];
   };
@@ -97,24 +98,24 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       badges: ["React", "Next.js", "UX Systems", "Performance"],
     },
     trajectory: {
-      title: "Studio Trajectory",
+      title: "Hoe Ik Werk",
       subtitle:
-        "In plaats van standaard secties: een product flow die strategie, bouw en ervaring samenbrengt.",
+        "Geen vage buzzwords, maar een duidelijke aanpak: eerst scherp krijgen wat je nodig hebt, daarna slim bouwen en stap voor stap verfijnen.",
       cards: [
         {
-          title: "Concept Architecture",
-          body: "Van idee naar interactief concept met duidelijke visuele richting en informatiearchitectuur.",
-          metric: "Vision -> Interface",
+          title: "Strategie & Structuur",
+          body: "Ik vertaal je idee naar een heldere structuur met duidelijke prioriteiten, flows en schermopbouw.",
+          metric: "Idee -> Plan",
         },
         {
-          title: "Interactive Engineering",
-          body: "Motion systems, componenten en performance tuning zodat de ervaring vloeiend en schaalbaar blijft.",
-          metric: "60fps target",
+          title: "Bouwen & Testen",
+          body: "Ik werk het uit in moderne webtechnologie en test onderweg op gebruiksgemak, snelheid en betrouwbaarheid.",
+          metric: "Build + Test",
         },
         {
-          title: "Product Refinement",
-          body: "Doorlopende iteratie op details, copy en UX-signalen totdat het geheel als product aanvoelt.",
-          metric: "UX polish",
+          title: "Afwerken & Verbeteren",
+          body: "We finetunen design, content en interactie tot alles logisch, professioneel en klaar voor echte gebruikers voelt.",
+          metric: "Launch-ready",
         },
       ],
     },
@@ -122,8 +123,29 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       title: "Project Stage",
       subtitle: "Mijn uitgelichte projecten.",
       openLabel: "Open project",
+      noLinkLabel: "Geen live link",
       hoverLabel: "Preview",
       items: [
+        {
+          title: "Portfolio Webdesign",
+          year: "2024",
+          description:
+            "Mijn allereerste webproject. Hier startte ik met eenvoudige HTML en legde ik de basis waarop ik vandaag verder bouw.",
+          tags: ["HTML", "CSS", "Eerste Website", "Leerproject"],
+          image: "/portfolio-webdesign.png",
+          url: "https://andreas06.sinners.be",
+          status: "Eerste project",
+        },
+        {
+          title: "Hyperdrive Festival",
+          year: "2025",
+          description:
+            "Fictief festivalconcept waarin dynamische content en speelse animatie centraal staan.",
+          tags: ["JavaScript", "APIs", "Creative Web"],
+          image: "/HyperDrive-Frontpage.png",
+          url: "https://hyperdrivefestival.netlify.app",
+          status: "Showcase",
+        },
         {
           title: "Binderbase",
           year: "2026",
@@ -146,14 +168,23 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
           status: "Growth stage",
         },
         {
-          title: "Hyperdrive Festival",
-          year: "2025",
+          title: "Bed and Breakfast Chez Natalie",
+          year: "2026",
           description:
-            "Fictief festivalconcept waarin dynamische content en speelse animatie centraal staan.",
-          tags: ["JavaScript", "APIs", "Creative Web"],
-          image: "/HyperDrive-Frontpage.png",
-          url: "https://hyperdrivefestival.netlify.app",
-          status: "Showcase",
+            "Groepsproject voor Skill 2-1 aan Thomas More: datamodelleren, use cases uitwerken en prototypes maken voor Bed and Breakfast Chez Natalie.",
+          tags: ["Datamodellering", "Use Cases", "Prototyping", "Groepsproject"],
+          image: "/BnB-chez-natalie-datmodel.png",
+          status: "Skill 2-1",
+        },
+        {
+          title: "Poutrel",
+          year: "2026",
+          description:
+            "Lopende groepswebapp gebouwd met de TALL stack. We werken met Scrum en Jira om zowel technisch als in teamverband te groeien voor Skill 2-2.",
+          tags: ["TALL Stack", "Web App", "Scrum", "Jira"],
+          image: "/Poutrel.png",
+          url: "https://poutrel.quintedev.be",
+          status: "Lopend project",
         },
       ],
     },
@@ -203,24 +234,24 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       badges: ["React", "Next.js", "UX Systems", "Performance"],
     },
     trajectory: {
-      title: "Studio Trajectory",
+      title: "How I Work",
       subtitle:
-        "Instead of default sections: a product flow that blends strategy, engineering, and experience.",
+        "No vague buzzwords, just a clear process: define what matters, build it properly, and improve it in focused iterations.",
       cards: [
         {
-          title: "Concept Architecture",
-          body: "From idea to interactive concept with a clear visual direction and information architecture.",
-          metric: "Vision -> Interface",
+          title: "Strategy & Structure",
+          body: "We turn your idea into a clear structure with practical priorities, flows, and screen hierarchy.",
+          metric: "Idea -> Plan",
         },
         {
-          title: "Interactive Engineering",
-          body: "Motion systems, components, and performance tuning to keep the experience fluid and scalable.",
-          metric: "60fps target",
+          title: "Build & Validate",
+          body: "I implement with modern web technology and test continuously for usability, speed, and reliability.",
+          metric: "Build + Test",
         },
         {
-          title: "Product Refinement",
-          body: "Continuous iteration on details, copy, and UX signals until the whole system feels like a product.",
-          metric: "UX polish",
+          title: "Refine & Ship",
+          body: "We polish design, content, and interactions until everything feels clear, professional, and ready for real users.",
+          metric: "Launch-ready",
         },
       ],
     },
@@ -228,8 +259,29 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       title: "Project Stage",
       subtitle: "My featured projects.",
       openLabel: "Open project",
+      noLinkLabel: "No live link",
       hoverLabel: "Preview",
       items: [
+        {
+          title: "Portfolio Webdesign",
+          year: "2024",
+          description:
+            "My very first web project. I started with simple HTML and learned core web foundations that still support everything I build today.",
+          tags: ["HTML", "CSS", "First Website", "Learning Project"],
+          image: "/portfolio-webdesign.png",
+          url: "https://andreas06.sinners.be",
+          status: "First project",
+        },
+        {
+          title: "Hyperdrive Festival",
+          year: "2025",
+          description:
+            "Fictional festival concept centered around dynamic content and playful interaction design.",
+          tags: ["JavaScript", "APIs", "Creative Web"],
+          image: "/HyperDrive-Frontpage.png",
+          url: "https://hyperdrivefestival.netlify.app",
+          status: "Showcase",
+        },
         {
           title: "Binderbase",
           year: "2026",
@@ -252,14 +304,23 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
           status: "Growth stage",
         },
         {
-          title: "Hyperdrive Festival",
-          year: "2025",
+          title: "Bed and Breakfast Chez Natalie",
+          year: "2026",
           description:
-            "Fictional festival concept centered around dynamic content and playful interaction design.",
-          tags: ["JavaScript", "APIs", "Creative Web"],
-          image: "/HyperDrive-Frontpage.png",
-          url: "https://hyperdrivefestival.netlify.app",
-          status: "Showcase",
+            "Team project for Skill 2-1 at Thomas More: data modelling, working out use cases, and creating prototypes for Bed and Breakfast Chez Natalie.",
+          tags: ["Data Modelling", "Use Cases", "Prototyping", "Team Project"],
+          image: "/BnB-chez-natalie-datmodel.png",
+          status: "Skill 2-1",
+        },
+        {
+          title: "Poutrel",
+          year: "2026",
+          description:
+            "Ongoing team web app built with the TALL stack. We use Scrum and Jira to grow both technical and collaboration skills for Skill 2-2.",
+          tags: ["TALL Stack", "Web App", "Scrum", "Jira"],
+          image: "/Poutrel.png",
+          url: "https://poutrel.quintedev.be",
+          status: "Ongoing project",
         },
       ],
     },

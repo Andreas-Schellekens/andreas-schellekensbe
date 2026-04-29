@@ -112,14 +112,20 @@ export default function ProjectsPage() {
                       ))}
                     </div>
 
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="portfolio-btn-secondary projects-stack-link"
-                    >
-                      {projects.openLabel}
-                    </a>
+                    {project.url ? (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="portfolio-btn-secondary projects-stack-link"
+                      >
+                        {projects.openLabel}
+                      </a>
+                    ) : (
+                      <span className="portfolio-btn-secondary projects-stack-link projects-stack-link-disabled">
+                        {projects.noLinkLabel}
+                      </span>
+                    )}
                   </div>
                 </article>
               </ScrollStackItem>
