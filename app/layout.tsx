@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Syne, Geist } from "next/font/google";
 import { LanguageProvider } from "./components/language-provider";
+import { MotionProvider } from "./components/motion-provider";
 import SiteHeader from "./components/site-header";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -57,10 +58,12 @@ export default function RootLayout({
       }
     >
       <body className="min-h-full flex flex-col">
-        <LanguageProvider>
-          <SiteHeader />
-          {children}
-        </LanguageProvider>
+        <MotionProvider>
+          <LanguageProvider>
+            <SiteHeader />
+            {children}
+          </LanguageProvider>
+        </MotionProvider>
       </body>
     </html>
   );

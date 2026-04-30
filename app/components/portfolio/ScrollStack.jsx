@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useCallback } from "react";
 import Lenis from "lenis";
 import "./ScrollStack.css";
+import { useMotionSettings } from "../motion-provider";
 
 export const ScrollStackItem = ({ children, itemClassName = "" }) => (
   <div className={`scroll-stack-card ${itemClassName}`.trim()}>{children}</div>
@@ -23,6 +24,7 @@ const ScrollStack = ({
   useWindowScroll = false,
   onStackComplete = undefined,
 }) => {
+  const { reducedMotion } = useMotionSettings();
   const scrollerRef = useRef(null);
   const stackCompletedRef = useRef(false);
   const animationFrameRef = useRef(null);
@@ -276,6 +278,23 @@ const ScrollStack = ({
 
     const cards = Array.from(scroller.querySelectorAll(".scroll-stack-card"));
 
+    if (reducedMotion) {
+      cards.forEach((card) => {
+        card.style.marginBottom = "";
+        card.style.willChange = "";
+        card.style.transformOrigin = "";
+        card.style.backfaceVisibility = "";
+        card.style.transform = "";
+        card.style.webkitTransform = "";
+        card.style.perspective = "";
+        card.style.webkitPerspective = "";
+        card.style.filter = "";
+      });
+      stackCompletedRef.current = false;
+      lastTransformsRef.current.clear();
+      return undefined;
+    }
+
     cardsRef.current = cards;
     const transformsCache = lastTransformsRef.current;
 
@@ -329,6 +348,7 @@ const ScrollStack = ({
       isUpdatingRef.current = false;
     };
   }, [
+    reducedMotion,
     itemDistance,
     itemScale,
     itemStackDistance,

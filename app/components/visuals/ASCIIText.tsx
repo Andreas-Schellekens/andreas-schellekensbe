@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import styles from "./ASCIIText.module.css";
+import { useMotionSettings } from "../motion-provider";
 
 const vertexShader = `
 varying vec2 vUv;
@@ -471,6 +472,7 @@ export default function ASCIIText({
   planeBaseHeight = 8,
   enableWaves = true,
 }: ASCIITextProps) {
+  const { reducedMotion } = useMotionSettings();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const asciiRef = useRef<CanvAscii | null>(null);
 
@@ -483,7 +485,14 @@ export default function ASCIIText({
 
     const createAndInit = async (container: HTMLDivElement, w: number, h: number) => {
       const instance = new CanvAscii(
-        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves },
+        {
+          text,
+          asciiFontSize,
+          textFontSize,
+          textColor,
+          planeBaseHeight,
+          enableWaves: enableWaves && !reducedMotion,
+        },
         container,
         w,
         h
@@ -510,7 +519,11 @@ export default function ASCIIText({
               if (!cancelled) {
                 asciiRef.current = await createAndInit(containerRef.current!, entryWidth, entryHeight);
                 if (!cancelled && asciiRef.current) {
-                  asciiRef.current.load();
+                  if (reducedMotion) {
+                    asciiRef.current.render();
+                  } else {
+                    asciiRef.current.load();
+                  }
                 }
               }
             }
@@ -523,13 +536,20 @@ export default function ASCIIText({
 
       asciiRef.current = await createAndInit(container, width, height);
       if (!cancelled && asciiRef.current) {
-        asciiRef.current.load();
+        if (reducedMotion) {
+          asciiRef.current.render();
+        } else {
+          asciiRef.current.load();
+        }
 
         ro = new ResizeObserver((entries) => {
           if (!entries[0] || !asciiRef.current) return;
           const { width: entryWidth, height: entryHeight } = entries[0].contentRect;
           if (entryWidth > 0 && entryHeight > 0) {
             asciiRef.current.setSize(entryWidth, entryHeight);
+            if (reducedMotion) {
+              asciiRef.current.render();
+            }
           }
         });
         ro.observe(container);
@@ -547,7 +567,7 @@ export default function ASCIIText({
         asciiRef.current = null;
       }
     };
-  }, [text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves]);
+  }, [text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves, reducedMotion]);
 
   return <div ref={containerRef} className={styles.container} />;
 }

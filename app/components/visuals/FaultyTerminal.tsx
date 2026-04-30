@@ -3,6 +3,7 @@
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
 import { useCallback, useEffect, useMemo, useRef, type HTMLAttributes } from "react";
 import styles from "./FaultyTerminal.module.css";
+import { useMotionSettings } from "../motion-provider";
 
 const vertexShader = `
 attribute vec2 position;
@@ -269,6 +270,7 @@ export default function FaultyTerminal({
   style,
   ...rest
 }: FaultyTerminalProps) {
+  const { reducedMotion } = useMotionSettings();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
@@ -292,6 +294,10 @@ export default function FaultyTerminal({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const allowMotion = !reducedMotion;
+    const allowMouse = mouseReact && allowMotion;
+    const allowPageLoadAnimation = pageLoadAnimation && allowMotion;
 
     const renderer = new Renderer({ dpr });
     const gl = renderer.gl;
@@ -323,9 +329,9 @@ export default function FaultyTerminal({
           value: new Float32Array([smoothMouseRef.current.x, smoothMouseRef.current.y]),
         },
         uMouseStrength: { value: mouseStrength },
-        uUseMouse: { value: mouseReact ? 1 : 0 },
-        uPageLoadProgress: { value: pageLoadAnimation ? 0 : 1 },
-        uUsePageLoadAnimation: { value: pageLoadAnimation ? 1 : 0 },
+        uUseMouse: { value: allowMouse ? 1 : 0 },
+        uPageLoadProgress: { value: allowPageLoadAnimation ? 0 : 1 },
+        uUsePageLoadAnimation: { value: allowPageLoadAnimation ? 1 : 0 },
         uBrightness: { value: brightness },
       },
     });
@@ -345,14 +351,12 @@ export default function FaultyTerminal({
     resizeObserver.observe(container);
     resize();
 
-    const update = (t: number) => {
-      rafRef.current = requestAnimationFrame(update);
-
-      if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
+    const renderFrame = (t: number) => {
+      if (allowPageLoadAnimation && loadAnimationStartRef.current === 0) {
         loadAnimationStartRef.current = t;
       }
 
-      if (!pause) {
+      if (!pause && allowMotion) {
         const elapsed = (t * 0.001 + timeOffsetRef.current) * timeScale;
         program.uniforms.iTime.value = elapsed;
         frozenTimeRef.current = elapsed;
@@ -360,14 +364,14 @@ export default function FaultyTerminal({
         program.uniforms.iTime.value = frozenTimeRef.current;
       }
 
-      if (pageLoadAnimation && loadAnimationStartRef.current > 0) {
+      if (allowPageLoadAnimation && loadAnimationStartRef.current > 0) {
         const animationDuration = 2000;
         const animationElapsed = t - loadAnimationStartRef.current;
         const progress = Math.min(animationElapsed / animationDuration, 1);
         program.uniforms.uPageLoadProgress.value = progress;
       }
 
-      if (mouseReact) {
+      if (allowMouse) {
         const dampingFactor = 0.08;
         const smoothMouse = smoothMouseRef.current;
         const mouse = mouseRef.current;
@@ -382,21 +386,32 @@ export default function FaultyTerminal({
       renderer.render({ scene: mesh });
     };
 
-    rafRef.current = requestAnimationFrame(update);
+    const update = (t: number) => {
+      rafRef.current = requestAnimationFrame(update);
+      renderFrame(t);
+    };
+
+    if (allowMotion) {
+      rafRef.current = requestAnimationFrame(update);
+    } else {
+      frozenTimeRef.current = 0;
+      renderFrame(performance.now());
+    }
     container.appendChild(gl.canvas);
 
-    if (mouseReact) container.addEventListener("mousemove", handleMouseMove);
+    if (allowMouse) container.addEventListener("mousemove", handleMouseMove);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       resizeObserver.disconnect();
-      if (mouseReact) container.removeEventListener("mousemove", handleMouseMove);
+      if (allowMouse) container.removeEventListener("mousemove", handleMouseMove);
       if (gl.canvas.parentElement === container) container.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       loadAnimationStartRef.current = 0;
       timeOffsetRef.current = Math.random() * 100;
     };
   }, [
+    reducedMotion,
     dpr,
     pause,
     timeScale,

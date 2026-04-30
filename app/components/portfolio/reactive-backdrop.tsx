@@ -2,6 +2,7 @@
 
 import { motion, type MotionValue, useScroll, useTransform } from "framer-motion";
 import FloatingLines from "./floating-lines";
+import { useMotionSettings } from "../motion-provider";
 
 type ReactiveBackdropProps = {
   cursorX: MotionValue<number>;
@@ -9,6 +10,7 @@ type ReactiveBackdropProps = {
 };
 
 export default function ReactiveBackdrop({ cursorX, cursorY }: ReactiveBackdropProps) {
+  const { reducedMotion } = useMotionSettings();
   const { scrollYProgress } = useScroll();
 
   const layerOneX = useTransform(cursorX, [0, 100], [-60, 60]);
@@ -20,6 +22,19 @@ export default function ReactiveBackdrop({ cursorX, cursorY }: ReactiveBackdropP
   const gridShiftY = useTransform(scrollYProgress, [0, 1], [0, 240]);
   const linesX = useTransform(cursorX, [0, 100], [-12, 12]);
   const linesY = useTransform(cursorY, [0, 100], [-10, 10]);
+
+  if (reducedMotion) {
+    return (
+      <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
+        <div className="reactive-base-gradient" />
+        <div className="reactive-grid" />
+        <div className="reactive-orb reactive-orb-a" />
+        <div className="reactive-orb reactive-orb-b" />
+        <div className="reactive-orb reactive-orb-c" />
+        <div className="reactive-noise" />
+      </div>
+    );
+  }
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden">
