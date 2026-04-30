@@ -84,14 +84,14 @@ export default function ProjectsPage() {
             {projects.items.map((project) => (
               <ScrollStackItem key={project.title} itemClassName="projects-stack-item">
                 <article className="projects-stack-shell">
-                  <div className="projects-stack-media">
+                  <div className={`projects-stack-media ${project.imagePanelClass ?? ""}`}>
                     <Image
                       src={project.image}
                       alt={`${project.title} preview`}
                       width={980}
                       height={600}
                       unoptimized
-                      className="h-full w-full object-cover object-top"
+                      className={`h-full w-full object-cover object-top ${project.imageClass ?? ""}`}
                     />
                     <span className="projects-stack-chip">{projects.hoverLabel}</span>
                   </div>

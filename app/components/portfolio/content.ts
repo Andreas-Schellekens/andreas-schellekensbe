@@ -9,6 +9,7 @@ export type PortfolioProject = {
   tags: string[];
   image: string;
   imagePanelClass?: string;
+  imageClass?: string;
   url?: string;
   status: string;
 };
@@ -127,6 +128,27 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       hoverLabel: "Preview",
       items: [
         {
+          title: "Binderbase ★",
+          year: "2025",
+          description:
+            "Platform voor verzamelaars met focus op overzicht, snelheid en gebruiksgemak voor dagelijks beheer.",
+          tags: ["Web App", "Frontend", "Backend", "UX", "TALL Stack"],
+          image: "/BinderBase-Frontpage.png",
+          url: "https://binderbase.andreas-schellekens.be",
+          status: "Live product",
+        },
+        {
+          title: "spuddy.be",
+          year: "2025",
+          description:
+            "Sport buddy matching platform met onboarding flows, slimme filtering en sociale activatie.",
+          tags: ["Platform", "Matching", "Startup"],
+          image: "/Spuddy-Frontpage.png",
+          imagePanelClass: "bg-slate-900",
+          url: "https://spuddy.be",
+          status: "Growth stage",
+        },
+        {
           title: "Portfolio Webdesign",
           year: "2024",
           description:
@@ -147,33 +169,13 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
           status: "Showcase",
         },
         {
-          title: "Binderbase",
-          year: "2026",
-          description:
-            "Platform voor verzamelaars met focus op overzicht, snelheid en gebruiksgemak voor dagelijks beheer.",
-          tags: ["Web App", "Frontend", "Backend", "UX"],
-          image: "/BinderBase-Frontpage.png",
-          url: "https://binderbase.andreas-schellekens.be",
-          status: "Live product",
-        },
-        {
-          title: "spuddy.be",
-          year: "2025",
-          description:
-            "Sport buddy matching platform met onboarding flows, slimme filtering en sociale activatie.",
-          tags: ["Platform", "Matching", "Startup"],
-          image: "/Spuddy-Frontpage.png",
-          imagePanelClass: "bg-slate-900",
-          url: "https://spuddy.be",
-          status: "Growth stage",
-        },
-        {
           title: "Bed and Breakfast Chez Natalie",
-          year: "2026",
+          year: "2025",
           description:
             "Groepsproject voor Skill 2-1 aan Thomas More: datamodelleren, use cases uitwerken en prototypes maken voor Bed and Breakfast Chez Natalie.",
           tags: ["Datamodellering", "Use Cases", "Prototyping", "Groepsproject"],
           image: "/BnB-chez-natalie-datmodel.png",
+          imageClass: "object-center",
           status: "Skill 2-1",
         },
         {
@@ -263,6 +265,27 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       hoverLabel: "Preview",
       items: [
         {
+          title: "Binderbase ★",
+          year: "2025",
+          description:
+            "Collector platform focused on clarity, speed, and everyday usability for collection management.",
+          tags: ["Web App", "Frontend", "Backend", "UX", "TALL Stack"],
+          image: "/BinderBase-Frontpage.png",
+          url: "https://binderbase.andreas-schellekens.be",
+          status: "Live product",
+        },
+        {
+          title: "spuddy.be",
+          year: "2025",
+          description:
+            "Sports buddy matching platform with onboarding flows, smart filters, and social activation.",
+          tags: ["Platform", "Matching", "Startup"],
+          image: "/Spuddy-Frontpage.png",
+          imagePanelClass: "bg-slate-900",
+          url: "https://spuddy.be",
+          status: "Growth stage",
+        },
+        {
           title: "Portfolio Webdesign",
           year: "2024",
           description:
@@ -283,33 +306,13 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
           status: "Showcase",
         },
         {
-          title: "Binderbase",
-          year: "2026",
-          description:
-            "Collector platform focused on clarity, speed, and everyday usability for collection management.",
-          tags: ["Web App", "Frontend", "Backend", "UX"],
-          image: "/BinderBase-Frontpage.png",
-          url: "https://binderbase.andreas-schellekens.be",
-          status: "Live product",
-        },
-        {
-          title: "spuddy.be",
-          year: "2025",
-          description:
-            "Sports buddy matching platform with onboarding flows, smart filters, and social activation.",
-          tags: ["Platform", "Matching", "Startup"],
-          image: "/Spuddy-Frontpage.png",
-          imagePanelClass: "bg-slate-900",
-          url: "https://spuddy.be",
-          status: "Growth stage",
-        },
-        {
           title: "Bed and Breakfast Chez Natalie",
-          year: "2026",
+          year: "2025",
           description:
             "Team project for Skill 2-1 at Thomas More: data modelling, working out use cases, and creating prototypes for Bed and Breakfast Chez Natalie.",
           tags: ["Data Modelling", "Use Cases", "Prototyping", "Team Project"],
           image: "/BnB-chez-natalie-datmodel.png",
+          imageClass: "object-center",
           status: "Skill 2-1",
         },
         {
