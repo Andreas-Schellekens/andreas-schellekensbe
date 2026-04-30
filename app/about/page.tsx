@@ -18,16 +18,10 @@ const content = {
     timelineTitle: "Mijn voorlopig traject in IT",
     timeline: [
       {
-        year: "Voor 2024",
-        title: "Nieuwsgierigheid eerst",
+        year: "2026",
+        title: "Nieuwe technologie blijven ontdekken",
         description:
-          "Technologie boeide me al lang voor mijn opleiding. Ik onderzocht graag hoe digitale producten werken en hoe je complexe dingen helder kan maken voor gebruikers.",
-      },
-      {
-        year: "2024",
-        title: "Start aan Thomas More",
-        description:
-          "In 2024 startte ik Toegepaste Informatica aan Thomas More. Daar legde ik een sterke basis in softwareontwikkeling, logisch denken en projectwerk.",
+          "Ik blijf actief bijleren rond moderne webtechnologie, performance en schaalbare architectuur om oplossingen te bouwen die lang meegaan.",
       },
       {
         year: "2025",
@@ -36,10 +30,22 @@ const content = {
           "Ik verdiepte mijn kennis door projectmatig te werken, nieuwe frameworks te verkennen en zowel frontend als backend in de praktijk te combineren.",
       },
       {
-        year: "2026",
-        title: "Nieuwe technologie blijven ontdekken",
+        year: "2024",
+        title: "Start aan Thomas More",
         description:
-          "Ik blijf actief bijleren rond moderne webtechnologie, performance en schaalbare architectuur om oplossingen te bouwen die lang meegaan.",
+          "In 2024 startte ik Toegepaste Informatica aan Thomas More. Daar legde ik een sterke basis in softwareontwikkeling, logisch denken en projectwerk.",
+      },
+      {
+        year: "2018-2024",
+        title: "Sintclara College (Economie moderne talen)",
+        description:
+          "Tijdens Economie moderne talen ontwikkelde ik analytisch denken en sterke taalvaardigheid. Dat helpt me vandaag om technische oplossingen helder uit te leggen en gebruiksvriendelijk te bouwen.",
+      },
+      {
+        year: "Voor 2024",
+        title: "Nieuwsgierigheid eerst",
+        description:
+          "Technologie boeide me al lang voor mijn opleiding. Die nieuwsgierigheid maakte het logisch om in IT te starten aan Thomas More: ik wilde begrijpen hoe digitale producten werken en ze zelf verbeteren.",
       },
     ],
     studyChoiceTitle: "Waarom Toegepaste Informatica",
@@ -87,16 +93,10 @@ const content = {
     timelineTitle: "My journey in IT so far",
     timeline: [
       {
-        year: "Before 2024",
-        title: "Curiosity came first",
+        year: "2026",
+        title: "Continuing to discover new technology",
         description:
-          "Technology fascinated me long before my formal studies. I was always exploring how digital products work and how to make complex ideas clearer for users.",
-      },
-      {
-        year: "2024",
-        title: "Started at Thomas More",
-        description:
-          "In 2024, I started Applied Computer Science at Thomas More, where I built a strong foundation in software development, logic, and project work.",
+          "I keep learning modern web technologies, performance optimization, and scalable architecture to build solutions that last.",
       },
       {
         year: "2025",
@@ -105,10 +105,22 @@ const content = {
           "I grew by working on practical projects, exploring new frameworks, and combining both frontend and backend development in real implementations.",
       },
       {
-        year: "2026",
-        title: "Continuing to discover new technology",
+        year: "2024",
+        title: "Started at Thomas More",
         description:
-          "I keep learning modern web technologies, performance optimization, and scalable architecture to build solutions that last.",
+          "In 2024, I started Applied Computer Science at Thomas More, where I built a strong foundation in software development, logic, and project work.",
+      },
+      {
+        year: "2018-2024",
+        title: "Sintclara College (Economics and modern languages)",
+        description:
+          "Studying economics and modern languages strengthened my analytical thinking and communication skills, which now help me translate complex problems into clear, user-focused software.",
+      },
+      {
+        year: "Before 2024",
+        title: "Curiosity came first",
+        description:
+          "Technology fascinated me long before my formal studies. That curiosity is why starting IT at Thomas More felt like the right step: I wanted to understand how digital products work and improve them myself.",
       },
     ],
     studyChoiceTitle: "Why Applied Computer Science",

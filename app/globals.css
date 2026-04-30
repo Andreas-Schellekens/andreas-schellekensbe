@@ -467,6 +467,7 @@ body {
   color: color-mix(in srgb, #dbeafe 76%, transparent);
 }
 
+
 .project-stage-card {
   display: block;
   overflow: hidden;
