@@ -42,6 +42,10 @@ export default function SiteHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = labels[language];
 
+  if (pathname.startsWith("/18-04-26")) {
+    return null;
+  }
+
   const navItems = [
     { href: "/", label: t.home, isActive: pathname === "/" },
     { href: "/about", label: t.about, isActive: pathname.startsWith("/about") },

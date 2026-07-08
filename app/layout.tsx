@@ -4,7 +4,6 @@ import { LanguageProvider } from "./components/language-provider";
 import { MotionProvider } from "./components/motion-provider";
 import SiteHeader from "./components/site-header";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -45,7 +44,8 @@ export default function RootLayout({
   return (
     <html
       lang="nl"
-      className={cn("h-full", "antialiased", syne.variable, ibmPlexMono.variable, "font-sans", geist.variable)}
+      suppressHydrationWarning
+      className={`h-full antialiased ${syne.variable} ${ibmPlexMono.variable} font-sans ${geist.variable}`}
       style={
         {
           "--color-bg": palette.bg,
