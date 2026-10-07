@@ -54,7 +54,7 @@ body {
 
 .portfolio-section-subtitle {
   max-width: 44rem;
-  color: color-mix(in srgb, #dbeafe 78%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
   font-size: 0.98rem;
   line-height: 1.7;
 }
@@ -175,7 +175,7 @@ body {
   font-size: 0.65rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: color-mix(in srgb, #dbeafe 84%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
 }
 
 .hero-pill-dot {
@@ -197,7 +197,7 @@ body {
 
 .hero-intro {
   max-width: 33rem;
-  color: color-mix(in srgb, #dbeafe 78%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
   font-size: clamp(1rem, 0.92rem + 0.4vw, 1.22rem);
   line-height: 1.72;
 }
@@ -215,7 +215,7 @@ body {
   font-size: 0.78rem;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: color-mix(in srgb, #93c5fd 70%, transparent);
+  color: color-mix(in srgb, #93c5fd 88%, transparent);
 }
 
 .hero-typing-line {
@@ -380,7 +380,7 @@ body {
   margin-top: 0.5rem;
   font-size: 0.93rem;
   line-height: 1.65;
-  color: color-mix(in srgb, #dbeafe 76%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
 }
 
 .projects-stack-tag {
@@ -391,7 +391,88 @@ body {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: color-mix(in srgb, #dbeafe 84%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
+}
+
+.featured-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.2rem;
+}
+
+.featured-grid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+@media (min-width: 640px) {
+  .featured-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .featured-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.featured-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--color-surface) 75%, transparent);
+  background: color-mix(in srgb, var(--color-layer) 70%, transparent);
+  box-shadow: 0 18px 34px color-mix(in srgb, #020617 34%, transparent);
+  transition: border-color 240ms ease, transform 240ms ease;
+}
+
+.featured-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  transform: translateY(-3px);
+}
+
+.featured-card-media {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-surface) 70%, transparent);
+}
+
+.featured-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.1rem 1.15rem 1.25rem;
+}
+
+.featured-card-title {
+  font-size: 1.2rem;
+  font-weight: 620;
+  color: #ffffff;
+}
+
+.featured-card-description {
+  flex: 1;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
+}
+
+.featured-card-link {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  transition: color 200ms ease;
+}
+
+.featured-card-link:hover {
+  color: #ffd0bd;
 }
 
 .projects-scroll-stack {
@@ -478,7 +559,7 @@ body {
   font-size: 0.67rem;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: color-mix(in srgb, #dbeafe 82%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
 }
 
 .projects-stack-title {
@@ -492,7 +573,7 @@ body {
   max-width: 46ch;
   font-size: 0.92rem;
   line-height: 1.6;
-  color: color-mix(in srgb, #dbeafe 78%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
 }
 
 .projects-stack-tags {
@@ -512,7 +593,7 @@ body {
 .projects-stack-link-disabled {
   pointer-events: none;
   border-color: color-mix(in srgb, var(--color-surface) 76%, transparent);
-  color: color-mix(in srgb, #dbeafe 74%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
   background: color-mix(in srgb, var(--color-layer) 58%, transparent);
 }
 
@@ -541,18 +622,6 @@ body {
   z-index: -1;
 }
 
-.projects-gateway-card {
-  background: color-mix(in srgb, var(--color-layer) 72%, transparent);
-}
-
-.projects-gateway-card::before {
-  display: none;
-}
-
-.projects-gateway-card .portfolio-contact-body {
-  max-width: 44rem;
-}
-
 .portfolio-contact-card > * {
   position: relative;
   z-index: 1;
@@ -579,7 +648,7 @@ body {
 .portfolio-contact-body {
   margin-top: 0.65rem;
   max-width: 38rem;
-  color: color-mix(in srgb, #dbeafe 76%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
   line-height: 1.68;
 }
 
@@ -599,7 +668,7 @@ body {
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: color-mix(in srgb, #93c5fd 74%, transparent);
+  color: color-mix(in srgb, #93c5fd 88%, transparent);
 }
 
 .contact-form-input,
@@ -617,7 +686,7 @@ body {
 
 .contact-form-input::placeholder,
 .contact-form-textarea::placeholder {
-  color: color-mix(in srgb, #dbeafe 45%, transparent);
+  color: color-mix(in srgb, #dbeafe 62%, transparent);
 }
 
 .contact-form-input:focus-visible,
@@ -632,13 +701,24 @@ body {
   min-height: 9.5rem;
 }
 
+.contact-form-input[aria-invalid="true"],
+.contact-form-textarea[aria-invalid="true"] {
+  border-color: color-mix(in srgb, #fb7185 75%, transparent);
+}
+
+.contact-form-field-error {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #fda4af;
+}
+
 .contact-form-message {
   font-size: 0.88rem;
   line-height: 1.55;
 }
 
 .contact-form-message-idle {
-  color: color-mix(in srgb, #dbeafe 72%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
 }
 
 .contact-form-message-success {
@@ -727,7 +807,7 @@ body {
   font-size: 0.56rem;
   letter-spacing: 0.04em;
   text-transform: none;
-  color: color-mix(in srgb, #dbeafe 80%, transparent);
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
 }
 
 .contact-dock-item:hover .contact-dock-tooltip {
@@ -744,10 +824,6 @@ body {
 @media (max-width: 767px) {
   html {
     scroll-padding-top: 4.8rem;
-  }
-
-  .portfolio-root {
-    padding-top: 6.1rem;
   }
 
   .portfolio-main {
@@ -843,6 +919,13 @@ body {
     align-items: center;
     gap: 0.5rem;
   }
+}
+
+.site-control-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(203 213 225);
 }
 
 .site-brand {

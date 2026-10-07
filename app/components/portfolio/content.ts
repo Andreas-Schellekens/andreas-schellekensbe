@@ -10,6 +10,8 @@ export type PortfolioProject = {
   imageClass?: string;
   url?: string;
   status: string;
+  /** Shown in the featured section on the home page. */
+  featured?: boolean;
 };
 
 export type PortfolioLocale = {
@@ -94,6 +96,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       items: [
         {
           title: "Binderbase ★",
+          featured: true,
           year: "2025",
           description:
             "Platform voor verzamelaars met focus op overzicht, snelheid en gebruiksgemak voor dagelijks beheer.",
@@ -104,6 +107,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
         },
         {
           title: "spuddy.be",
+          featured: true,
           year: "2025",
           description:
             "Sport buddy matching platform met onboarding flows, slimme filtering en sociale activatie.",
@@ -145,6 +149,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
         },
         {
           title: "Poutrel",
+          featured: true,
           year: "2026",
           description:
             "Lopende groepswebapp gebouwd met de TALL stack. We werken met Scrum en Jira om zowel technisch als in teamverband te groeien voor Skill 2-2.",
@@ -210,6 +215,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       items: [
         {
           title: "Binderbase ★",
+          featured: true,
           year: "2025",
           description:
             "Collector platform focused on clarity, speed, and everyday usability for collection management.",
@@ -220,6 +226,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
         },
         {
           title: "spuddy.be",
+          featured: true,
           year: "2025",
           description:
             "Sports buddy matching platform with onboarding flows, smart filters, and social activation.",
@@ -261,6 +268,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
         },
         {
           title: "Poutrel",
+          featured: true,
           year: "2026",
           description:
             "Ongoing team web app built with the TALL stack. We use Scrum and Jira to grow both technical and collaboration skills for Skill 2-2.",

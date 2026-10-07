@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import ASCIIText from "./components/visuals/ASCIIText";
-import FaultyTerminal from "./components/visuals/FaultyTerminal";
-import { useLanguage } from "./components/language-provider";
-import styles from "./not-found.module.css";
+import { useSyncExternalStore } from "react";
+import { DEFAULT_LOCALE, isLocale, LOCALE_COOKIE, localizePath, type Language } from "@/lib/i18n";
+import ASCIIText from "./visuals/ASCIIText";
+import FaultyTerminal from "./visuals/FaultyTerminal";
+import styles from "./not-found-view.module.css";
 
 const content = {
   nl: {
@@ -21,8 +22,19 @@ const content = {
   },
 } as const;
 
-export default function NotFound() {
-  const { language } = useLanguage();
+// The 404 renders outside the [lang] layout, so derive the language from the URL or the saved cookie.
+function detectLanguage(): Language {
+  const fromPath = window.location.pathname.split("/")[1];
+  if (isLocale(fromPath)) return fromPath;
+
+  const fromCookie = document.cookie.match(new RegExp(`(?:^|; )${LOCALE_COOKIE}=([^;]+)`))?.[1];
+  return isLocale(fromCookie) ? fromCookie : DEFAULT_LOCALE;
+}
+
+const subscribe = () => () => {};
+
+export default function NotFoundView() {
+  const language = useSyncExternalStore(subscribe, detectLanguage, () => DEFAULT_LOCALE);
   const t = content[language];
 
   return (
@@ -59,10 +71,10 @@ export default function NotFound() {
         <h1 className={styles.title}>{t.title}</h1>
         <p className={styles.body}>{t.body}</p>
         <div className={styles.actions}>
-          <Link href="/" className={styles.primary}>
+          <Link href={localizePath(language, "/")} className={styles.primary}>
             {t.home}
           </Link>
-          <Link href="/projects" className={styles.secondary}>
+          <Link href={localizePath(language, "/projects")} className={styles.secondary}>
             {t.projects}
           </Link>
         </div>

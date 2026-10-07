@@ -1,8 +1,17 @@
 "use client";
 
 import { motion, type MotionValue, useScroll, useTransform } from "framer-motion";
-import FloatingLines from "./floating-lines";
+import dynamic from "next/dynamic";
 import { useMotionSettings } from "../motion-provider";
+import { useMediaQuery } from "../use-media-query";
+
+// three.js is large: load the WebGL lines in a separate chunk, only in the browser, only when they will render.
+const FloatingLines = dynamic(() => import("./floating-lines"), { ssr: false });
+
+function isLowPowerDevice() {
+  const nav = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
+  return Boolean(nav.connection?.saveData) || (nav.deviceMemory !== undefined && nav.deviceMemory < 4);
+}
 
 type ReactiveBackdropProps = {
   cursorX: MotionValue<number>;
@@ -11,6 +20,9 @@ type ReactiveBackdropProps = {
 
 export default function ReactiveBackdrop({ cursorX, cursorY }: ReactiveBackdropProps) {
   const { reducedMotion } = useMotionSettings();
+  // Skip the WebGL layer on phones, small tablets and data-saver / low-memory devices.
+  const isLargeScreen = useMediaQuery("(min-width: 768px)");
+  const showLines = isLargeScreen && !isLowPowerDevice();
   const { scrollYProgress } = useScroll();
 
   const layerOneX = useTransform(cursorX, [0, 100], [-60, 60]);
@@ -43,22 +55,24 @@ export default function ReactiveBackdrop({ cursorX, cursorY }: ReactiveBackdropP
       <motion.div className="reactive-orb reactive-orb-a" style={{ x: layerOneX, y: layerOneY }} />
       <motion.div className="reactive-orb reactive-orb-b" style={{ x: layerTwoX, y: layerTwoY }} />
       <motion.div className="reactive-orb reactive-orb-c" style={{ x: layerThreeX, y: layerThreeY }} />
-      <motion.div className="floating-lines-host" style={{ x: linesX, y: linesY }}>
-        <FloatingLines
-          linesGradient={["#87A7EE", "#5678CA", "#344F9D", "#1F2F66"]}
-          enabledWaves={["top", "middle", "bottom"]}
-          lineCount={[3, 7, 4]}
-          lineDistance={[5, 6, 5]}
-          animationSpeed={1.05}
-          interactive
-          bendRadius={6}
-          bendStrength={-0.65}
-          mouseDamping={0.08}
-          parallax
-          parallaxStrength={0.18}
-          mixBlendMode="screen"
-        />
-      </motion.div>
+      {showLines ? (
+        <motion.div className="floating-lines-host" style={{ x: linesX, y: linesY }}>
+          <FloatingLines
+            linesGradient={["#87A7EE", "#5678CA", "#344F9D", "#1F2F66"]}
+            enabledWaves={["top", "middle", "bottom"]}
+            lineCount={[3, 7, 4]}
+            lineDistance={[5, 6, 5]}
+            animationSpeed={1.05}
+            interactive
+            bendRadius={6}
+            bendStrength={-0.65}
+            mouseDamping={0.08}
+            parallax
+            parallaxStrength={0.18}
+            mixBlendMode="screen"
+          />
+        </motion.div>
+      ) : null}
       <div className="reactive-noise" />
     </div>
   );

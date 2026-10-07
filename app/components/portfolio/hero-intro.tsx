@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useLanguage } from "../language-provider";
 import { useMotionSettings } from "../motion-provider";
 import type { PortfolioLocale } from "./content";
 
@@ -13,6 +14,7 @@ type HeroIntroProps = {
 
 export default function HeroIntro({ hero }: HeroIntroProps) {
   const { reducedMotion } = useMotionSettings();
+  const { href } = useLanguage();
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -65,14 +67,11 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
   return (
     <section id="intro" className="portfolio-hero grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
       <div className="space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {/* The heading is the first thing people see: render it immediately instead of fading in. */}
+        <div>
           <h1 className="hero-title">{hero.greeting}</h1>
           <p className="hero-intro mt-5">{hero.intro}</p>
-        </motion.div>
+        </div>
 
         <motion.div
           className="hero-typing-wrap"
@@ -101,22 +100,17 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Link href="/contact" className="portfolio-btn-primary" data-cursor="interactive">
+          <Link href={href("/contact")} className="portfolio-btn-primary" data-cursor="interactive">
             {hero.ctaPrimary}
           </Link>
-          <Link href="/projects" className="portfolio-btn-secondary" data-cursor="interactive">
+          <Link href={href("/projects")} className="portfolio-btn-secondary" data-cursor="interactive">
             {hero.ctaSecondary}
           </Link>
         </motion.div>
 
       </div>
 
-      <motion.div
-        className="hero-portrait-wrapper"
-        initial={{ opacity: 0, y: 22, scale: 0.97 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 0.14, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-      >
+      <div className="hero-portrait-wrapper">
         <article className="hero-portrait-card">
           <div className="hero-portrait-image-shell">
             <Image
@@ -124,12 +118,13 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
               alt={hero.profileAlt}
               width={560}
               height={640}
-              unoptimized
+              sizes="(min-width: 1024px) 30vw, (min-width: 768px) 90vw, 22rem"
+              preload
               className="h-full w-full object-cover"
             />
           </div>
         </article>
-      </motion.div>
+      </div>
     </section>
   );
 }

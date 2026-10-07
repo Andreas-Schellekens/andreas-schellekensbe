@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, type FormEvent } from "react";
-import PageShell from "../components/portfolio/page-shell";
-import { portfolioContent } from "../components/portfolio/content";
-import { useLanguage } from "../components/language-provider";
+import { useState, type FormEvent, type ReactNode } from "react";
+import PageShell from "../../components/portfolio/page-shell";
+import { portfolioContent } from "../../components/portfolio/content";
+import { useLanguage } from "../../components/language-provider";
 
 // Contact details are the same in every language.
 const { email: CONTACT_EMAIL, linkedinUrl: LINKEDIN_URL, githubUrl: GITHUB_URL } = portfolioContent.nl.contact;
@@ -23,9 +23,45 @@ type FormSubmitResult = {
 
 const initialContactFormState: ContactFormState = { status: "idle" };
 
+const FIELDS = ["name", "email", "subject", "message"] as const;
+
+type FieldName = (typeof FIELDS)[number];
+type FieldValues = Record<FieldName, string>;
+type FieldErrors = Partial<Record<FieldName, string>>;
+
 function readField(formData: FormData, name: string) {
   const value = formData.get(name);
   return typeof value === "string" ? value.trim() : "";
+}
+
+function validateField(field: FieldName, value: string, errors: ContactCopy["errors"]): string | undefined {
+  switch (field) {
+    case "name":
+      if (!value) return errors.nameRequired;
+      if (value.length < 2) return errors.nameTooShort;
+      return undefined;
+    case "email":
+      if (!value) return errors.emailRequired;
+      if (!EMAIL_PATTERN.test(value)) return errors.emailInvalid;
+      return undefined;
+    case "subject":
+      if (!value) return errors.subjectRequired;
+      if (value.length < 2) return errors.subjectTooShort;
+      return undefined;
+    case "message":
+      if (!value) return errors.messageRequired;
+      if (value.length < 10) return errors.messageTooShort(value.length);
+      return undefined;
+  }
+}
+
+function validateAll(values: FieldValues, errors: ContactCopy["errors"]): FieldErrors {
+  const result: FieldErrors = {};
+  for (const field of FIELDS) {
+    const error = validateField(field, values[field], errors);
+    if (error) result[field] = error;
+  }
+  return result;
 }
 
 const content = {
@@ -43,7 +79,17 @@ const content = {
     sendingLabel: "Bezig met verzenden...",
     idleMessage: "Ik antwoord normaal binnen 1-2 werkdagen.",
     successMessage: "Bedankt! Je bericht is verzonden.",
-    validationMessage: "Controleer je invoer en probeer opnieuw.",
+    validationMessage: "Niet alle velden zijn correct ingevuld. Bekijk de meldingen hierboven.",
+    errors: {
+      nameRequired: "Vul je naam in.",
+      nameTooShort: "Je naam moet minstens 2 tekens lang zijn.",
+      emailRequired: "Vul je e-mailadres in.",
+      emailInvalid: "Dit lijkt geen geldig e-mailadres. Bijvoorbeeld: naam@voorbeeld.be",
+      subjectRequired: "Vul een onderwerp in.",
+      subjectTooShort: "Het onderwerp moet minstens 2 tekens lang zijn.",
+      messageRequired: "Schrijf een bericht.",
+      messageTooShort: (length: number) => `Je bericht moet minstens 10 tekens lang zijn (nu ${length}).`,
+    },
     activationMessage: "Eerst het FormSubmit-activatiemailtje openen en op 'Activate Form' klikken.",
     sendErrorMessage: "Verzenden is niet gelukt. Probeer straks opnieuw.",
     detailsTitle: "Andere manieren om contact op te nemen",
@@ -65,7 +111,17 @@ const content = {
     sendingLabel: "Sending...",
     idleMessage: "I usually reply within 1-2 working days.",
     successMessage: "Thanks! Your message has been sent.",
-    validationMessage: "Please check your input and try again.",
+    validationMessage: "Some fields need attention. Check the messages above.",
+    errors: {
+      nameRequired: "Please enter your name.",
+      nameTooShort: "Your name needs at least 2 characters.",
+      emailRequired: "Please enter your email address.",
+      emailInvalid: "This does not look like a valid email address, e.g. name@example.com",
+      subjectRequired: "Please enter a subject.",
+      subjectTooShort: "The subject needs at least 2 characters.",
+      messageRequired: "Please write a message.",
+      messageTooShort: (length: number) => `Your message needs at least 10 characters (currently ${length}).`,
+    },
     activationMessage: "Please open the FormSubmit activation email and click 'Activate Form' first.",
     sendErrorMessage: "Sending failed. Please try again later.",
     detailsTitle: "Other ways to connect",
@@ -75,11 +131,28 @@ const content = {
   },
 } as const;
 
-export default function ContactPage() {
+type ContactCopy = (typeof content)[keyof typeof content];
+
+export default function ContactView() {
   const { language } = useLanguage();
   const t = content[language];
   const [state, setState] = useState(initialContactFormState);
   const [pending, setPending] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  // Once a field shows an error, re-check it while the visitor types so the message clears as soon as it is fixed.
+  const handleFieldInput = (event: FormEvent<HTMLFormElement>) => {
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    const field = target.name as FieldName;
+    if (!fieldErrors[field]) return;
+
+    const error = validateField(field, target.value.trim(), t.errors);
+    const next = { ...fieldErrors, [field]: error };
+    setFieldErrors(next);
+    if (state.reason === "validation" && FIELDS.every((name) => !next[name])) {
+      setState(initialContactFormState);
+    }
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,21 +169,21 @@ export default function ContactPage() {
       return;
     }
 
-    const name = readField(formData, "name");
-    const email = readField(formData, "email");
-    const subject = readField(formData, "subject");
-    const message = readField(formData, "message");
+    const values: FieldValues = {
+      name: readField(formData, "name"),
+      email: readField(formData, "email"),
+      subject: readField(formData, "subject"),
+      message: readField(formData, "message"),
+    };
+    const { name, email, subject, message } = values;
 
-    if (
-      name.length < 2 ||
-      name.length > 120 ||
-      !EMAIL_PATTERN.test(email) ||
-      subject.length < 2 ||
-      subject.length > 140 ||
-      message.length < 10 ||
-      message.length > 5000
-    ) {
+    const errors = validateAll(values, t.errors);
+    setFieldErrors(errors);
+
+    const firstInvalid = FIELDS.find((field) => errors[field]);
+    if (firstInvalid) {
       setState({ status: "error", reason: "validation" });
+      (form.elements.namedItem(firstInvalid) as HTMLElement | null)?.focus();
       return;
     }
 
@@ -211,7 +284,7 @@ export default function ContactPage() {
           <h2 className="portfolio-contact-title text-3xl">{t.formTitle}</h2>
           <p className="portfolio-contact-body">{t.formBody}</p>
 
-          <form onSubmit={handleSubmit} className="contact-form">
+          <form onSubmit={handleSubmit} onInput={handleFieldInput} noValidate className="contact-form">
             <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="sr-only" />
 
             <label className="contact-form-field">
@@ -224,7 +297,10 @@ export default function ContactPage() {
                 required
                 minLength={2}
                 maxLength={120}
+                aria-invalid={Boolean(fieldErrors.name)}
+                aria-describedby={fieldErrors.name ? "name-error" : undefined}
               />
+              <FieldError id="name-error">{fieldErrors.name}</FieldError>
             </label>
 
             <label className="contact-form-field">
@@ -236,7 +312,10 @@ export default function ContactPage() {
                 autoComplete="email"
                 required
                 maxLength={180}
+                aria-invalid={Boolean(fieldErrors.email)}
+                aria-describedby={fieldErrors.email ? "email-error" : undefined}
               />
+              <FieldError id="email-error">{fieldErrors.email}</FieldError>
             </label>
 
             <label className="contact-form-field">
@@ -248,7 +327,10 @@ export default function ContactPage() {
                 required
                 minLength={2}
                 maxLength={140}
+                aria-invalid={Boolean(fieldErrors.subject)}
+                aria-describedby={fieldErrors.subject ? "subject-error" : undefined}
               />
+              <FieldError id="subject-error">{fieldErrors.subject}</FieldError>
             </label>
 
             <label className="contact-form-field">
@@ -260,7 +342,10 @@ export default function ContactPage() {
                 minLength={10}
                 maxLength={5000}
                 rows={7}
+                aria-invalid={Boolean(fieldErrors.message)}
+                aria-describedby={fieldErrors.message ? "message-error" : undefined}
               />
+              <FieldError id="message-error">{fieldErrors.message}</FieldError>
             </label>
 
             <button type="submit" disabled={pending} className="portfolio-btn-primary w-full sm:w-auto">
@@ -306,5 +391,14 @@ export default function ContactPage() {
         </motion.aside>
       </section>
     </PageShell>
+  );
+}
+
+function FieldError({ id, children }: { id: string; children?: ReactNode }) {
+  if (!children) return null;
+  return (
+    <span id={id} className="contact-form-field-error">
+      {children}
+    </span>
   );
 }

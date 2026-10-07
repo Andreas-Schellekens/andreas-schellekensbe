@@ -1,20 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Syne } from "next/font/google";
-import { LanguageProvider } from "./components/language-provider";
-import { MotionProvider } from "./components/motion-provider";
-import SiteHeader from "./components/site-header";
-import "./globals.css";
-
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
+import { notFound } from "next/navigation";
+import { LanguageProvider } from "../components/language-provider";
+import { MotionProvider } from "../components/motion-provider";
+import SiteHeader from "../components/site-header";
+import { ibmPlexMono, syne } from "../fonts";
+import { isLocale, LOCALES } from "@/lib/i18n";
+import { rootMetadata } from "@/lib/page-metadata";
+import "../globals.css";
 
 const palette = {
   bg: "#181A2F",
@@ -25,19 +17,22 @@ const palette = {
   deep: "#54162B",
 };
 
-export const metadata: Metadata = {
-  title: "Andreas Schellekens | Portfolio",
-  description: "Interactive portfolio experience by Andreas Schellekens",
-};
+export const metadata: Metadata = rootMetadata;
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+// Only /nl and /en exist; anything else is a 404.
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }));
+}
+
+export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+
   return (
     <html
-      lang="nl"
+      lang={lang}
       suppressHydrationWarning
       className={`h-full antialiased ${syne.variable} ${ibmPlexMono.variable}`}
       style={
@@ -53,7 +48,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <MotionProvider>
-          <LanguageProvider>
+          <LanguageProvider language={lang}>
             <SiteHeader />
             {children}
           </LanguageProvider>

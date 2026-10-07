@@ -1,66 +1,38 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { createContext, useCallback, useContext, useMemo } from "react";
+import { LOCALE_COOKIE, localizePath, stripLocale, type Language } from "@/lib/i18n";
 
-export type Language = "nl" | "en";
+export type { Language };
 
 type LanguageContextValue = {
   language: Language;
   setLanguage: (language: Language) => void;
+  /** Prefixes an app path with the current language: href("/about") -> "/en/about". */
+  href: (path: string) => string;
 };
-
-const STORAGE_KEY = "site-language";
-const DEFAULT_LANGUAGE: Language = "nl";
-
-const listeners = new Set<() => void>();
-// Fallback for when localStorage is unavailable (e.g. blocked in private mode).
-let memoryLanguage: Language | null = null;
-
-function readStoredLanguage(): Language {
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "nl" || stored === "en") return stored;
-  } catch {
-    // Fall through to the in-memory value.
-  }
-  return memoryLanguage ?? DEFAULT_LANGUAGE;
-}
-
-function subscribe(listener: () => void) {
-  listeners.add(listener);
-  window.addEventListener("storage", listener);
-  return () => {
-    listeners.delete(listener);
-    window.removeEventListener("storage", listener);
-  };
-}
-
-function setLanguage(language: Language) {
-  memoryLanguage = language;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, language);
-  } catch {
-    // Storage unavailable; the in-memory value keeps the choice for this session.
-  }
-  listeners.forEach((listener) => listener());
-}
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const language = useSyncExternalStore(subscribe, readStoredLanguage, () => DEFAULT_LANGUAGE);
+// The language lives in the URL (/nl/..., /en/...), so the server renders the right
+// language from the first byte. The cookie only tells proxy.ts where to send "/" next time.
+export function LanguageProvider({ language, children }: { language: Language; children: React.ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
 
-  useEffect(() => {
-    document.documentElement.lang = language;
-  }, [language]);
-
-  const value = useMemo(
-    () => ({
-      language,
-      setLanguage,
-    }),
-    [language],
+  const setLanguage = useCallback(
+    (next: Language) => {
+      if (next === language) return;
+      document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
+      router.push(localizePath(next, stripLocale(pathname)), { scroll: false });
+    },
+    [language, pathname, router],
   );
+
+  const href = useCallback((path: string) => localizePath(language, path), [language]);
+
+  const value = useMemo(() => ({ language, setLanguage, href }), [language, setLanguage, href]);
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import PageShell from "../components/portfolio/page-shell";
-import ScrollStack, { ScrollStackItem } from "../components/portfolio/ScrollStack";
-import { portfolioContent } from "../components/portfolio/content";
-import { useLanguage } from "../components/language-provider";
+import PageShell from "../../components/portfolio/page-shell";
+import ScrollStack, { ScrollStackItem } from "../../components/portfolio/ScrollStack";
+import { portfolioContent } from "../../components/portfolio/content";
+import { useLanguage } from "../../components/language-provider";
 
 const pageContent = {
   nl: {
@@ -30,8 +30,8 @@ const pageContent = {
   },
 } as const;
 
-export default function ProjectsPage() {
-  const { language } = useLanguage();
+export default function ProjectsView() {
+  const { language, href } = useLanguage();
   const t = pageContent[language];
   const projects = portfolioContent[language].projects;
 
@@ -71,7 +71,7 @@ export default function ProjectsPage() {
                     alt={`${project.title} preview`}
                     width={980}
                     height={600}
-                    unoptimized
+                    sizes="(min-width: 768px) 45vw, 100vw"
                     className={`h-full w-full object-cover object-top ${project.imageClass ?? ""}`}
                   />
                   <span className="projects-stack-chip">{projects.hoverLabel}</span>
@@ -121,7 +121,7 @@ export default function ProjectsPage() {
                 </p>
                 <h2 className="projects-stack-title">{t.soonTitle}</h2>
                 <p className="projects-stack-description">{t.soonBody}</p>
-                <Link href="/contact" className="portfolio-btn-primary projects-stack-link-primary">
+                <Link href={href("/contact")} className="portfolio-btn-primary projects-stack-link-primary">
                   {t.soonCta}
                 </Link>
               </div>

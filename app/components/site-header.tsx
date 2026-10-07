@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "./language-provider";
 import { useMotionSettings } from "./motion-provider";
+import { stripLocale } from "@/lib/i18n";
 
 const labels = {
   nl: {
@@ -40,23 +41,23 @@ const labels = {
 } as const;
 
 export default function SiteHeader() {
-  const pathname = usePathname();
-  const { language, setLanguage } = useLanguage();
+  const pathname = stripLocale(usePathname());
+  const { language, setLanguage, href } = useLanguage();
   const { reducedMotion, setReducedMotion } = useMotionSettings();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = labels[language];
 
   const navItems = [
-    { href: "/", label: t.home, isActive: pathname === "/" },
-    { href: "/about", label: t.about, isActive: pathname.startsWith("/about") },
-    { href: "/projects", label: t.projects, isActive: pathname.startsWith("/projects") },
-    { href: "/contact", label: t.contact, isActive: pathname.startsWith("/contact") },
+    { href: href("/"), label: t.home, isActive: pathname === "/" },
+    { href: href("/about"), label: t.about, isActive: pathname.startsWith("/about") },
+    { href: href("/projects"), label: t.projects, isActive: pathname.startsWith("/projects") },
+    { href: href("/contact"), label: t.contact, isActive: pathname.startsWith("/contact") },
   ] as const;
 
   return (
-    <header className="site-header fixed inset-x-0 top-0 z-50 sm:sticky">
+    <header className="site-header sticky inset-x-0 top-0 z-50">
       <nav className="site-nav mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:flex-nowrap sm:px-6">
-        <Link href="/" className="site-brand" onClick={() => setIsMobileMenuOpen(false)}>
+        <Link href={href("/")} className="site-brand" onClick={() => setIsMobileMenuOpen(false)}>
           {t.brand}
         </Link>
 
@@ -93,7 +94,7 @@ export default function SiteHeader() {
 
           <div className="site-controls">
             <div className="site-lang-corner">
-              <span className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{t.languageLabel}</span>
+              <span className="site-control-label">{t.languageLabel}</span>
               <div className="site-toggle">
                 <button
                   type="button"
@@ -115,7 +116,7 @@ export default function SiteHeader() {
             </div>
 
             <div className="site-motion-corner">
-              <span className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{t.motionLabel}</span>
+              <span className="site-control-label">{t.motionLabel}</span>
               <div className="site-toggle">
                 <button
                   type="button"

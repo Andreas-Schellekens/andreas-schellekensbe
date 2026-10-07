@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import PageShell from "../components/portfolio/page-shell";
-import { useLanguage } from "../components/language-provider";
+import PageShell from "../../components/portfolio/page-shell";
+import { useLanguage } from "../../components/language-provider";
 
 const cvPdfPath = "/cv/CV_Andreas_Schellekens.pdf";
 
@@ -163,33 +163,24 @@ const content = {
   },
 } as const;
 
-export default function AboutPage() {
-  const { language } = useLanguage();
+export default function AboutView() {
+  const { language, href } = useLanguage();
   const t = content[language];
 
   return (
     <PageShell>
       <section className="portfolio-section grid items-center gap-6 md:gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-        <motion.div
-          className="space-y-4"
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {/* Above the fold: render immediately instead of fading in from opacity 0. */}
+        <div className="space-y-4">
           <p className="hero-pill">
             <span className="hero-pill-dot" />
             {t.badge}
           </p>
           <h1 className="portfolio-section-title">{t.title}</h1>
           <p className="portfolio-section-subtitle text-base">{t.intro}</p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="mx-auto w-full max-w-sm"
-          initial={{ opacity: 0, y: 18, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 0.08, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="mx-auto w-full max-w-sm">
           <div className="hero-portrait-card">
             <div className="hero-portrait-image-shell">
               <Image
@@ -197,12 +188,13 @@ export default function AboutPage() {
                 alt={t.photoAlt}
                 width={420}
                 height={460}
-                unoptimized
+                sizes="24rem"
+                preload
                 className="h-full w-full object-cover"
               />
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section className="portfolio-section space-y-6">
@@ -287,7 +279,7 @@ export default function AboutPage() {
         <p className="portfolio-contact-body">{t.cvBody}</p>
         <div className="portfolio-contact-actions mt-5 flex flex-wrap items-center gap-3">
           <Link
-            href="/cv"
+            href={href("/cv")}
             className="portfolio-btn-primary portfolio-action-link w-full justify-center sm:w-auto"
             prefetch={false}
           >

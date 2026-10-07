@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "../language-provider";
@@ -51,23 +52,24 @@ const cardVariants = {
   }),
 };
 
-const projectGatewayContent = {
+const featuredContent = {
   nl: {
-    title: "Projecten op een aparte pagina",
-    body: "Ik heb mijn projecten verplaatst naar een dedicated pagina met interactieve scroll stack.",
+    title: "Uitgelichte projecten",
+    subtitle: "Een greep uit wat ik gebouwd heb, van live producten tot lopend teamwerk.",
     cta: "Bekijk alle projecten",
   },
   en: {
-    title: "Projects on a separate page",
-    body: "I moved my projects to a dedicated page with an interactive scroll stack.",
+    title: "Featured projects",
+    subtitle: "A selection of what I have built, from live products to ongoing team work.",
     cta: "View all projects",
   },
 } as const;
 
 export default function PortfolioExperience() {
-  const { language } = useLanguage();
+  const { language, href } = useLanguage();
   const t = portfolioContent[language];
-  const projectGateway = projectGatewayContent[language];
+  const featured = featuredContent[language];
+  const featuredProjects = t.projects.items.filter((project) => project.featured);
 
   return (
     <PageShell>
@@ -118,22 +120,68 @@ export default function PortfolioExperience() {
         </div>
       </section>
 
-      <section id="projects" className="portfolio-section">
-        <motion.article
-          className="portfolio-contact-card projects-gateway-card"
+      <section id="projects" className="portfolio-section space-y-8">
+        <motion.div
+          className="featured-header"
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.32 }}
-          transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, amount: 0.42 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h2 className="portfolio-contact-title text-3xl">{projectGateway.title}</h2>
-          <p className="portfolio-contact-body">{projectGateway.body}</p>
-          <div className="portfolio-contact-actions mt-5">
-            <Link href="/projects" className="portfolio-btn-primary portfolio-action-link">
-              {projectGateway.cta}
-            </Link>
+          <div className="space-y-3">
+            <h2 className="portfolio-section-title">{featured.title}</h2>
+            <p className="portfolio-section-subtitle">{featured.subtitle}</p>
           </div>
-        </motion.article>
+          <Link href={href("/projects")} className="portfolio-btn-secondary featured-all-link">
+            {featured.cta}
+          </Link>
+        </motion.div>
+
+        <div className="featured-grid">
+          {featuredProjects.map((project, index) => (
+            <motion.article
+              key={project.title}
+              className="featured-card"
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.25 }}
+              custom={index}
+            >
+              <div className={`featured-card-media ${project.imagePanelClass ?? ""}`}>
+                <Image
+                  src={project.image}
+                  alt={`${project.title} preview`}
+                  width={640}
+                  height={400}
+                  sizes="(min-width: 1024px) 28vw, (min-width: 640px) 45vw, 100vw"
+                  className={`h-full w-full object-cover object-top ${project.imageClass ?? ""}`}
+                />
+              </div>
+              <div className="featured-card-body">
+                <p className="projects-stack-meta">
+                  <span>{project.year}</span>
+                  <span>{project.status}</span>
+                </p>
+                <h3 className="featured-card-title">{project.title}</h3>
+                <p className="featured-card-description">{project.description}</p>
+                <div className="projects-stack-tags">
+                  {project.tags.slice(0, 3).map((tag) => (
+                    <span key={tag} className="projects-stack-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {project.url ? (
+                  <a href={project.url} target="_blank" rel="noreferrer" className="featured-card-link">
+                    {t.projects.openLabel}
+                    <span aria-hidden="true"> ↗</span>
+                  </a>
+                ) : null}
+              </div>
+            </motion.article>
+          ))}
+        </div>
       </section>
 
       <section id="contact" className="portfolio-section">
@@ -146,7 +194,7 @@ export default function PortfolioExperience() {
           <ContactDock
             items={[
               {
-                href: "/contact",
+                href: href("/contact"),
                 label: t.contact.formLabel,
                 description: t.contact.email,
                 icon: <MailIcon className="contact-dock-icon" />,
