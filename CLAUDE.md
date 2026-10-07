@@ -17,7 +17,7 @@ Personal portfolio of Andreas Schellekens (andreas-schellekens.be). Next.js 16.2
   - `proxy.ts` redirects locale-less URLs (`/`, `/about`, …) using the `site-language` cookie, then `Accept-Language`, then `nl`. Its matcher skips `_next`, `sitemap.xml`, `robots.txt` and any path with a file extension.
   - `lib/i18n.ts` holds `LOCALES`, `isLocale`, `localizePath`, `stripLocale` and `SITE_URL` (`https://andreas-schellekens.be`).
   - `LanguageProvider` gets the language from the layout's `params`. `useLanguage()` returns `{ language, setLanguage, href }`; always build internal links with `href("/path")`. `setLanguage` sets the cookie and navigates to the same page in the other language.
-- `app/[lang]/layout.tsx` is the root layout: fonts from `app/fonts.ts`, palette CSS variables (`--color-bg`, `--color-layer`, `--color-surface`, `--color-accent`, `--color-highlight`, `--color-deep`), then `MotionProvider` > `LanguageProvider` > `SiteHeader`.
+- `app/[lang]/layout.tsx` is the root layout: fonts from `app/fonts.ts`, palette CSS variables (`--color-bg`, `--color-layer`, `--color-surface`, `--color-accent`, `--color-highlight`, `--color-deep`), then `MotionProvider` > `LanguageProvider` > `SiteHeader`, the page and `SiteFooter` (`components/site-footer.tsx`).
 - **Pages:** each route has a server `page.tsx` that only exports `generateMetadata` (via `pageMetadata()` in `lib/page-metadata.ts`) and renders a client `*-view.tsx`. Home renders `components/portfolio/portfolio-experience.tsx`. To add a page: add its path and NL/EN copy to `PAGE_PATHS`/`pageCopy` (this also adds it to the sitemap).
 - **SEO files:** `app/sitemap.ts`, `app/robots.ts`, `app/[lang]/opengraph-image.tsx` (generated 1200×630 card per language; `pageMetadata` points subpages at it because a page-level `openGraph` replaces the inherited image).
 - **404:** `app/global-not-found.tsx` (experimental `globalNotFound` flag in `next.config.ts`, needed because the root layout is dynamic) renders `components/not-found-view.tsx`, which detects the language from the URL or cookie. It has its own `<html>`, so it wraps itself in `MotionProvider`.
@@ -35,6 +35,9 @@ Personal portfolio of Andreas Schellekens (andreas-schellekens.be). Next.js 16.2
 - Above-the-fold content (hero heading, portraits) must not start at `opacity: 0`; it delays the first paint.
 - Images go through `next/image` with a realistic `sizes`; never `unoptimized`. Use `preload` (not the deprecated `priority`) for the main above-the-fold image.
 - Styling: semantic classes in `app/globals.css` mixed with Tailwind utilities; use the palette variables rather than new hard-coded colours, and keep body text at ≥88% opacity on the dark background. Remove CSS when you remove the component that used it.
+- Layout width: the header, `.portfolio-main` and the footer all use `--page-max-width` and `--page-gutter` (defined on `html` in `globals.css`) so their edges line up. Don't give them their own max-width or padding.
+- Focus: a global `:where(a, button, …):focus-visible` coral outline covers every control. Don't add per-component focus rules or remove outlines.
+- Lightning CSS adds vendor prefixes. Don't write `-webkit-backdrop-filter` next to `backdrop-filter`: it merges them and keeps only the prefixed one.
 - Shared easing curve: `[0.22, 1, 0.36, 1]`.
 - Contact form: client-side validation with per-field localized errors (`noValidate`, `aria-invalid`, `aria-describedby`), posts to FormSubmit's AJAX endpoint, and never shows the provider's raw text.
 - No shadcn/ui setup. If you need react-bits/shadcn components again, run `npx shadcn init` first.

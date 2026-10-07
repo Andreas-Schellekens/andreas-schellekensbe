@@ -56,7 +56,7 @@ export default function SiteHeader() {
 
   return (
     <header className="site-header sticky inset-x-0 top-0 z-50">
-      <nav className="site-nav mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:flex-nowrap sm:px-6">
+      <nav className="site-nav flex flex-wrap items-center justify-between gap-3 py-3 sm:flex-nowrap">
         <Link href={href("/")} className="site-brand" onClick={() => setIsMobileMenuOpen(false)}>
           {t.brand}
         </Link>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LanguageProvider } from "../components/language-provider";
 import { MotionProvider } from "../components/motion-provider";
+import SiteFooter from "../components/site-footer";
 import SiteHeader from "../components/site-header";
 import { ibmPlexMono, syne } from "../fonts";
 import { isLocale, LOCALES } from "@/lib/i18n";
@@ -51,6 +52,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
           <LanguageProvider language={lang}>
             <SiteHeader />
             {children}
+            <SiteFooter />
           </LanguageProvider>
         </MotionProvider>
       </body>

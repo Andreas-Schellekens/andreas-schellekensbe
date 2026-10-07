@@ -6,6 +6,9 @@
 }
 
 html {
+  /* Shared by the header, page content and footer so their edges line up. */
+  --page-max-width: 84rem;
+  --page-gutter: clamp(1.1rem, 3vw, 2.6rem);
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
 }
@@ -14,6 +17,12 @@ body {
   background: var(--color-bg);
   color: #e5ecfa;
   font-family: var(--font-syne), sans-serif;
+}
+
+/* One visible focus ring for every interactive element; :where keeps it overridable. */
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 ::selection {
@@ -33,10 +42,10 @@ body {
   z-index: 20;
   margin-inline: auto;
   display: flex;
-  width: min(100%, 84rem);
+  width: min(100%, var(--page-max-width));
   flex-direction: column;
   gap: clamp(4.5rem, 10vw, 7rem);
-  padding-inline: clamp(1.1rem, 3vw, 2.6rem);
+  padding-inline: var(--page-gutter);
   padding-bottom: 5.5rem;
   padding-top: clamp(1.4rem, 2.6vw, 2.4rem);
 }
@@ -880,14 +889,24 @@ body {
 }
 
 .site-header {
+  /* Solid colour for the mobile menu panel; the bar itself is translucent glass. */
   --site-header-bg: #181a2f;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-surface) 72%, transparent);
-  background: var(--site-header-bg);
-  backdrop-filter: blur(14px);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-surface) 60%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .site-header {
+    background: var(--site-header-bg);
+  }
 }
 
 .site-nav {
   position: relative;
+  margin-inline: auto;
+  width: min(100%, var(--page-max-width));
+  padding-inline: var(--page-gutter);
 }
 
 .site-controls {
@@ -994,11 +1013,6 @@ body {
 
 .site-menu-btn:hover {
   border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
-}
-
-.site-menu-btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
 }
 
 .site-menu-btn-line {
@@ -1133,6 +1147,96 @@ body {
     padding-inline: 0.45rem;
     font-size: 0.68rem;
   }
+}
+
+.site-footer {
+  position: relative;
+  z-index: 20;
+  border-top: 1px solid color-mix(in srgb, var(--color-surface) 60%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 78%, transparent);
+}
+
+.site-footer-inner {
+  margin-inline: auto;
+  display: grid;
+  gap: 1.4rem;
+  width: min(100%, var(--page-max-width));
+  padding: 2.4rem var(--page-gutter) 1.6rem;
+}
+
+@media (min-width: 768px) {
+  .site-footer-inner {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+.site-footer-brand {
+  color: var(--color-accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-footer-tagline {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
+}
+
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-footer-link {
+  display: inline-flex;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
+  background: color-mix(in srgb, var(--color-layer) 64%, transparent);
+  padding: 0.45rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ebf3ff;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+
+.site-footer-link:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 72%, transparent);
+  color: var(--color-accent);
+}
+
+.site-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-surface) 50%, transparent);
+  padding-top: 1.2rem;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
+}
+
+@media (min-width: 768px) {
+  .site-footer-bottom {
+    grid-column: 1 / -1;
+  }
+}
+
+.site-footer-top {
+  border-radius: 0.4rem;
+  color: color-mix(in srgb, #dbeafe 88%, transparent);
+  text-transform: uppercase;
+  transition: color 200ms ease;
+}
+
+.site-footer-top:hover {
+  color: var(--color-accent);
 }
 
 .pulse-dot {
