@@ -1,7 +1,7 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
 
 type MotionContextValue = {
   reducedMotion: boolean;
@@ -9,35 +9,51 @@ type MotionContextValue = {
 };
 
 const STORAGE_KEY = "site-reduced-motion";
+const MEDIA_QUERY = "(prefers-reduced-motion: reduce)";
+
+const listeners = new Set<() => void>();
+// Fallback for when localStorage is unavailable (e.g. blocked in private mode).
+let memoryPreference: boolean | null = null;
+
+function readReducedMotion(): boolean {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "true" || stored === "false") return stored === "true";
+  } catch {
+    // Fall through to the in-memory value.
+  }
+  if (memoryPreference !== null) return memoryPreference;
+
+  // No explicit choice yet: follow the operating system setting.
+  return window.matchMedia(MEDIA_QUERY).matches;
+}
+
+function subscribe(listener: () => void) {
+  const media = window.matchMedia(MEDIA_QUERY);
+  listeners.add(listener);
+  window.addEventListener("storage", listener);
+  media.addEventListener("change", listener);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", listener);
+    media.removeEventListener("change", listener);
+  };
+}
+
+function setReducedMotion(value: boolean) {
+  memoryPreference = value;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, String(value));
+  } catch {
+    // Storage unavailable; the in-memory value keeps the choice for this session.
+  }
+  listeners.forEach((listener) => listener());
+}
 
 const MotionContext = createContext<MotionContextValue | null>(null);
 
 export function MotionProvider({ children }: { children: React.ReactNode }) {
-  const [reducedMotion, setReducedMotionState] = useState(false);
-  const hasStoredPreferenceRef = useRef(false);
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "true" || stored === "false") {
-      hasStoredPreferenceRef.current = true;
-      setReducedMotionState(stored === "true");
-      return undefined;
-    }
-
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotionState(media.matches);
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      if (!hasStoredPreferenceRef.current) {
-        setReducedMotionState(event.matches);
-      }
-    };
-
-    media.addEventListener("change", handleChange);
-    return () => {
-      media.removeEventListener("change", handleChange);
-    };
-  }, []);
+  const reducedMotion = useSyncExternalStore(subscribe, readReducedMotion, () => false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -45,18 +61,12 @@ export function MotionProvider({ children }: { children: React.ReactNode }) {
     root.dataset.reducedMotion = reducedMotion ? "true" : "false";
   }, [reducedMotion]);
 
-  const setReducedMotion = useCallback((value: boolean) => {
-    hasStoredPreferenceRef.current = true;
-    setReducedMotionState(value);
-    window.localStorage.setItem(STORAGE_KEY, String(value));
-  }, []);
-
   const value = useMemo(
     () => ({
       reducedMotion,
       setReducedMotion,
     }),
-    [reducedMotion, setReducedMotion],
+    [reducedMotion],
   );
 
   return (

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useMotionSettings } from "../motion-provider";
 import type { PortfolioLocale } from "./content";
 
 type HeroIntroProps = {
@@ -11,11 +12,16 @@ type HeroIntroProps = {
 };
 
 export default function HeroIntro({ hero }: HeroIntroProps) {
+  const { reducedMotion } = useMotionSettings();
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typedText, setTypedText] = useState("");
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    if (reducedMotion) {
+      return undefined;
+    }
+
     const currentPhrase = hero.typingLines[phraseIndex] ?? "";
     const isTypingForward = !deleting;
     const reachedEnd = typedText === currentPhrase;
@@ -54,7 +60,7 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
     return () => {
       window.clearTimeout(timer);
     };
-  }, [deleting, hero.typingLines, phraseIndex, typedText]);
+  }, [deleting, hero.typingLines, phraseIndex, reducedMotion, typedText]);
 
   return (
     <section id="intro" className="portfolio-hero grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
@@ -75,12 +81,18 @@ export default function HeroIntro({ hero }: HeroIntroProps) {
           transition={{ delay: 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="hero-typing-prefix">{hero.typingPrefix}</p>
-          <p className="hero-typing-line" aria-live="polite">
-            {typedText}
-            <span className="hero-typing-caret" aria-hidden>
-              |
-            </span>
-          </p>
+          {reducedMotion ? (
+            <p className="hero-typing-line">{hero.typingLines[0]}</p>
+          ) : (
+            <>
+              {/* Screen readers get the full phrases once instead of every typed character. */}
+              <p className="sr-only">{hero.typingLines.join(" ")}</p>
+              <p className="hero-typing-line" aria-hidden>
+                {typedText}
+                <span className="hero-typing-caret">|</span>
+              </p>
+            </>
+          )}
         </motion.div>
 
         <motion.div

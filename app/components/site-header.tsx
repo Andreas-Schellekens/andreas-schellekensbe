@@ -19,6 +19,8 @@ const labels = {
     motionLabel: "Animaties",
     motionOn: "Aan",
     motionOff: "Uit",
+    openMenu: "Navigatiemenu openen",
+    closeMenu: "Navigatiemenu sluiten",
   },
   en: {
     brand: "Andreas Schellekens",
@@ -32,6 +34,8 @@ const labels = {
     motionLabel: "Motion",
     motionOn: "On",
     motionOff: "Off",
+    openMenu: "Open navigation menu",
+    closeMenu: "Close navigation menu",
   },
 } as const;
 
@@ -41,10 +45,6 @@ export default function SiteHeader() {
   const { reducedMotion, setReducedMotion } = useMotionSettings();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const t = labels[language];
-
-  if (pathname.startsWith("/18-04-26")) {
-    return null;
-  }
 
   const navItems = [
     { href: "/", label: t.home, isActive: pathname === "/" },
@@ -66,7 +66,7 @@ export default function SiteHeader() {
           onClick={() => setIsMobileMenuOpen((current) => !current)}
           aria-expanded={isMobileMenuOpen}
           aria-controls="site-mobile-menu"
-          aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-label={isMobileMenuOpen ? t.closeMenu : t.openMenu}
         >
           <span className={`site-menu-btn-line ${isMobileMenuOpen ? "site-menu-btn-line-top-open" : ""}`} />
           <span className={`site-menu-btn-line ${isMobileMenuOpen ? "site-menu-btn-line-middle-open" : ""}`} />

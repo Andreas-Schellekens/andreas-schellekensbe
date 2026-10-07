@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# andreas-schellekens.be
 
-## Getting Started
+Personal portfolio of Andreas Schellekens, built with Next.js 16 (App Router), React 19, Tailwind CSS v4 and framer-motion. The site is bilingual (Dutch / English) and has a user-controlled motion toggle.
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Script          | What it does                 |
+| --------------- | ---------------------------- |
+| `npm run dev`   | Start the dev server         |
+| `npm run build` | Production build             |
+| `npm run start` | Serve the production build   |
+| `npm run lint`  | Run ESLint (flat config)     |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Structure
 
-## Learn More
+```
+app/
+  layout.tsx                 Root layout: fonts, palette variables, providers, header
+  page.tsx                   Home (renders PortfolioExperience)
+  about/ projects/ contact/ cv/
+  not-found.tsx              404 with WebGL terminal + ASCII effect
+  components/
+    language-provider.tsx    NL/EN state, persisted in localStorage
+    motion-provider.tsx      Reduced-motion state (follows OS setting until the user chooses)
+    site-header.tsx          Navigation + language/motion toggles
+    portfolio/
+      content.ts             Shared portfolio copy and project list (per language)
+      page-shell.tsx         Page wrapper: cursor-reactive backdrop + <main>
+      ...                    Hero, contact dock, scroll stack, backdrop effects
+    visuals/                 FaultyTerminal (ogl) and ASCIIText (three.js) for the 404
+components/BorderGlow.*      Glow card used on the home page
+public/                      Images and the CV PDF
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Conventions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Page copy lives in a `content = { nl, en } as const` object and is read through `useLanguage()`.
+- Styling is mostly semantic classes in `app/globals.css`, mixed with Tailwind utilities. Palette tokens (`--color-bg`, `--color-accent`, …) are set in `app/layout.tsx`.
+- Animations should respect `useMotionSettings().reducedMotion`; framer-motion picks this up automatically through `MotionConfig`.
+- The contact form posts to [FormSubmit](https://formsubmit.co). The first submission sends an activation email that must be confirmed once.

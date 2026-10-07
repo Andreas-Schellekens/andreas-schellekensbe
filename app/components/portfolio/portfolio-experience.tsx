@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useMotionValue } from "framer-motion";
-import { type PointerEvent } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "../language-provider";
 import BorderGlow from "@/components/BorderGlow";
 import ContactDock from "./contact-dock";
 import { portfolioContent } from "./content";
 import HeroIntro from "./hero-intro";
-import ReactiveBackdrop from "./reactive-backdrop";
+import PageShell from "./page-shell";
 
 type IconProps = {
   className?: string;
@@ -70,124 +69,104 @@ export default function PortfolioExperience() {
   const t = portfolioContent[language];
   const projectGateway = projectGatewayContent[language];
 
-  const cursorX = useMotionValue(50);
-  const cursorY = useMotionValue(50);
-
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    const x = (event.clientX / window.innerWidth) * 100;
-    const y = (event.clientY / window.innerHeight) * 100;
-    cursorX.set(x);
-    cursorY.set(y);
-  };
-
-  const resetCursorPosition = () => {
-    cursorX.set(50);
-    cursorY.set(50);
-  };
-
   return (
-    <div className="portfolio-root" onPointerMove={handlePointerMove} onPointerLeave={resetCursorPosition}>
-      <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
+    <PageShell>
+      <HeroIntro key={language} hero={t.hero} />
 
-      <main className="portfolio-main">
-        <HeroIntro key={language} hero={t.hero} />
+      <section id="trajectory" className="portfolio-section space-y-8">
+        <motion.div
+          className="space-y-3"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.42 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="portfolio-section-title">{t.trajectory.title}</h2>
+          <p className="portfolio-section-subtitle">{t.trajectory.subtitle}</p>
+        </motion.div>
 
-        <section id="trajectory" className="portfolio-section space-y-8">
-          <motion.div
-            className="space-y-3"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.42 }}
-            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h2 className="portfolio-section-title">{t.trajectory.title}</h2>
-            <p className="portfolio-section-subtitle">{t.trajectory.subtitle}</p>
-          </motion.div>
-
-          <div className="trajectory-grid">
-            {t.trajectory.cards.map((card, index) => (
-              <motion.div
-                key={card.title}
-                className={index === 1 ? "trajectory-card-middle" : ""}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.35 }}
-                custom={index}
+        <div className="trajectory-grid">
+          {t.trajectory.cards.map((card, index) => (
+            <motion.div
+              key={card.title}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.35 }}
+              custom={index}
+            >
+              <BorderGlow
+                className="trajectory-border-glow"
+                borderRadius={18}
+                glowRadius={30}
+                glowIntensity={0.82}
+                glowColor="214 88 72"
+                colors={["#96BCFF", "#4F73CD", "#FDA481"]}
+                backgroundColor="#152340"
+                fillOpacity={0.34}
+                edgeSensitivity={24}
+                coneSpread={24}
               >
-                <BorderGlow
-                  className="trajectory-border-glow"
-                  borderRadius={18}
-                  glowRadius={30}
-                  glowIntensity={0.82}
-                  glowColor="214 88 72"
-                  colors={["#96BCFF", "#4F73CD", "#FDA481"]}
-                  backgroundColor="#152340"
-                  fillOpacity={0.34}
-                  edgeSensitivity={24}
-                  coneSpread={24}
-                >
-                  <article className="trajectory-card">
-                    <p className="trajectory-card-metric">{card.metric}</p>
-                    <h3 className="trajectory-card-title">{card.title}</h3>
-                    <p className="trajectory-card-body">{card.body}</p>
-                  </article>
-                </BorderGlow>
-              </motion.div>
-            ))}
+                <article className="trajectory-card">
+                  <p className="trajectory-card-metric">{card.metric}</p>
+                  <h3 className="trajectory-card-title">{card.title}</h3>
+                  <p className="trajectory-card-body">{card.body}</p>
+                </article>
+              </BorderGlow>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section id="projects" className="portfolio-section">
+        <motion.article
+          className="portfolio-contact-card projects-gateway-card"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.32 }}
+          transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="portfolio-contact-title text-3xl">{projectGateway.title}</h2>
+          <p className="portfolio-contact-body">{projectGateway.body}</p>
+          <div className="portfolio-contact-actions mt-5">
+            <Link href="/projects" className="portfolio-btn-primary portfolio-action-link">
+              {projectGateway.cta}
+            </Link>
           </div>
-        </section>
+        </motion.article>
+      </section>
 
-        <section id="projects" className="portfolio-section">
-          <motion.article
-            className="portfolio-contact-card projects-gateway-card"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.32 }}
-            transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h2 className="portfolio-contact-title text-3xl">{projectGateway.title}</h2>
-            <p className="portfolio-contact-body">{projectGateway.body}</p>
-            <div className="portfolio-contact-actions mt-5">
-              <Link href="/projects" className="portfolio-btn-primary portfolio-action-link">
-                {projectGateway.cta}
-              </Link>
-            </div>
-          </motion.article>
-        </section>
-
-        <section id="contact" className="portfolio-section">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <ContactDock
-              items={[
-                {
-                  href: "/contact",
-                  label: t.contact.formLabel,
-                  description: t.contact.email,
-                  icon: <MailIcon className="contact-dock-icon" />,
-                },
-                {
-                  href: t.contact.linkedinUrl,
-                  label: t.contact.linkedinLabel,
-                  description: t.contact.linkedinName,
-                  icon: <LinkedInIcon className="contact-dock-icon" />,
-                },
-                {
-                  href: t.contact.githubUrl,
-                  label: t.contact.githubLabel,
-                  description: t.contact.githubName,
-                  icon: <GitHubIcon className="contact-dock-icon" />,
-                },
-              ]}
-            />
-          </motion.div>
-        </section>
-      </main>
-    </div>
+      <section id="contact" className="portfolio-section">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <ContactDock
+            items={[
+              {
+                href: "/contact",
+                label: t.contact.formLabel,
+                description: t.contact.email,
+                icon: <MailIcon className="contact-dock-icon" />,
+              },
+              {
+                href: t.contact.linkedinUrl,
+                label: t.contact.linkedinLabel,
+                description: t.contact.linkedinName,
+                icon: <LinkedInIcon className="contact-dock-icon" />,
+              },
+              {
+                href: t.contact.githubUrl,
+                label: t.contact.githubLabel,
+                description: t.contact.githubName,
+                icon: <GitHubIcon className="contact-dock-icon" />,
+              },
+            ]}
+          />
+        </motion.div>
+      </section>
+    </PageShell>
   );
 }

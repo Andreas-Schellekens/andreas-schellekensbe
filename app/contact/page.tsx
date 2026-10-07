@@ -1,20 +1,19 @@
 "use client";
 
-import { motion, useMotionValue } from "framer-motion";
-import { useState, type FormEvent, type PointerEvent } from "react";
-import ReactiveBackdrop from "../components/portfolio/reactive-backdrop";
+import { motion } from "framer-motion";
+import { useState, type FormEvent } from "react";
+import PageShell from "../components/portfolio/page-shell";
+import { portfolioContent } from "../components/portfolio/content";
 import { useLanguage } from "../components/language-provider";
 
-const CONTACT_EMAIL = "andreas.schellekens8@gmail.com";
+// Contact details are the same in every language.
+const { email: CONTACT_EMAIL, linkedinUrl: LINKEDIN_URL, githubUrl: GITHUB_URL } = portfolioContent.nl.contact;
 const FORM_SUBMIT_ENDPOINT = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
-const LINKEDIN_URL = "https://www.linkedin.com/in/andreas-schellekens/";
-const GITHUB_URL = "https://github.com/Andreas-Schellekens";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type ContactFormState = {
   status: "idle" | "success" | "error";
   reason?: "validation" | "activation" | "send";
-  providerMessage?: string;
 };
 
 type FormSubmitResult = {
@@ -23,6 +22,11 @@ type FormSubmitResult = {
 };
 
 const initialContactFormState: ContactFormState = { status: "idle" };
+
+function readField(formData: FormData, name: string) {
+  const value = formData.get(name);
+  return typeof value === "string" ? value.trim() : "";
+}
 
 const content = {
   nl: {
@@ -77,21 +81,6 @@ export default function ContactPage() {
   const [state, setState] = useState(initialContactFormState);
   const [pending, setPending] = useState(false);
 
-  const cursorX = useMotionValue(50);
-  const cursorY = useMotionValue(50);
-
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    const x = (event.clientX / window.innerWidth) * 100;
-    const y = (event.clientY / window.innerHeight) * 100;
-    cursorX.set(x);
-    cursorY.set(y);
-  };
-
-  const resetCursorPosition = () => {
-    cursorX.set(50);
-    cursorY.set(50);
-  };
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (pending) {
@@ -101,17 +90,16 @@ export default function ContactPage() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    const honeypotValue = formData.get("website");
-    if (typeof honeypotValue === "string" && honeypotValue.trim().length > 0) {
+    if (readField(formData, "website").length > 0) {
       setState({ status: "success" });
       form.reset();
       return;
     }
 
-    const name = typeof formData.get("name") === "string" ? formData.get("name")?.toString().trim() ?? "" : "";
-    const email = typeof formData.get("email") === "string" ? formData.get("email")?.toString().trim() ?? "" : "";
-    const subject = typeof formData.get("subject") === "string" ? formData.get("subject")?.toString().trim() ?? "" : "";
-    const message = typeof formData.get("message") === "string" ? formData.get("message")?.toString().trim() ?? "" : "";
+    const name = readField(formData, "name");
+    const email = readField(formData, "email");
+    const subject = readField(formData, "subject");
+    const message = readField(formData, "message");
 
     if (
       name.length < 2 ||
@@ -156,24 +144,15 @@ export default function ContactPage() {
         parsed = null;
       }
 
-      if (!response.ok) {
-        setState({
-          status: "error",
-          reason: "send",
-          providerMessage: parsed?.message ?? `Request failed with status ${response.status}.`,
-        });
-        return;
-      }
-
-      const submitSucceeded = parsed?.success === true || parsed?.success === "true";
+      const submitSucceeded = response.ok && (parsed?.success === true || parsed?.success === "true");
       if (!submitSucceeded) {
-        const providerMessage = parsed?.message ?? "The email provider did not confirm delivery.";
-        const activationNeeded = /activat/i.test(providerMessage);
+        // The provider's message is English-only, so log it and show our own localized text.
+        const providerMessage = parsed?.message ?? `Request failed with status ${response.status}.`;
+        console.error("Contact form submission failed:", providerMessage);
 
         setState({
           status: "error",
-          reason: activationNeeded ? "activation" : "send",
-          providerMessage,
+          reason: /activat/i.test(providerMessage) ? "activation" : "send",
         });
         return;
       }
@@ -195,7 +174,7 @@ export default function ContactPage() {
           ? t.validationMessage
           : state.reason === "activation"
             ? t.activationMessage
-            : state.providerMessage ?? t.sendErrorMessage
+            : t.sendErrorMessage
         : t.idleMessage;
 
   const statusClass =
@@ -206,130 +185,126 @@ export default function ContactPage() {
         : "contact-form-message-idle";
 
   return (
-    <div className="portfolio-root" onPointerMove={handlePointerMove} onPointerLeave={resetCursorPosition}>
-      <ReactiveBackdrop cursorX={cursorX} cursorY={cursorY} />
+    <PageShell>
+      <motion.section
+        className="portfolio-section space-y-4"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <p className="hero-pill">
+          <span className="hero-pill-dot" />
+          {t.badge}
+        </p>
+        <h1 className="portfolio-section-title">{t.title}</h1>
+        <p className="portfolio-section-subtitle">{t.intro}</p>
+      </motion.section>
 
-      <main className="portfolio-main">
-        <motion.section
-          className="portfolio-section space-y-4"
+      <section className="portfolio-section grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <motion.article
+          className="portfolio-contact-card"
           initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="hero-pill">
-            <span className="hero-pill-dot" />
-            {t.badge}
-          </p>
-          <h1 className="portfolio-section-title">{t.title}</h1>
-          <p className="portfolio-section-subtitle">{t.intro}</p>
-        </motion.section>
+          <h2 className="portfolio-contact-title text-3xl">{t.formTitle}</h2>
+          <p className="portfolio-contact-body">{t.formBody}</p>
 
-        <section className="portfolio-section grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-          <motion.article
-            className="portfolio-contact-card"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h2 className="portfolio-contact-title text-3xl">{t.formTitle}</h2>
-            <p className="portfolio-contact-body">{t.formBody}</p>
+          <form onSubmit={handleSubmit} className="contact-form">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="sr-only" />
 
-            <form onSubmit={handleSubmit} className="contact-form">
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" className="sr-only" />
+            <label className="contact-form-field">
+              <span className="contact-form-label">{t.nameLabel}</span>
+              <input
+                className="contact-form-input"
+                type="text"
+                name="name"
+                autoComplete="name"
+                required
+                minLength={2}
+                maxLength={120}
+              />
+            </label>
 
-              <label className="contact-form-field">
-                <span className="contact-form-label">{t.nameLabel}</span>
-                <input
-                  className="contact-form-input"
-                  type="text"
-                  name="name"
-                  autoComplete="name"
-                  required
-                  minLength={2}
-                  maxLength={120}
-                />
-              </label>
+            <label className="contact-form-field">
+              <span className="contact-form-label">{t.emailLabel}</span>
+              <input
+                className="contact-form-input"
+                type="email"
+                name="email"
+                autoComplete="email"
+                required
+                maxLength={180}
+              />
+            </label>
 
-              <label className="contact-form-field">
-                <span className="contact-form-label">{t.emailLabel}</span>
-                <input
-                  className="contact-form-input"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  required
-                  maxLength={180}
-                />
-              </label>
+            <label className="contact-form-field">
+              <span className="contact-form-label">{t.subjectLabel}</span>
+              <input
+                className="contact-form-input"
+                type="text"
+                name="subject"
+                required
+                minLength={2}
+                maxLength={140}
+              />
+            </label>
 
-              <label className="contact-form-field">
-                <span className="contact-form-label">{t.subjectLabel}</span>
-                <input
-                  className="contact-form-input"
-                  type="text"
-                  name="subject"
-                  required
-                  minLength={2}
-                  maxLength={140}
-                />
-              </label>
+            <label className="contact-form-field">
+              <span className="contact-form-label">{t.messageLabel}</span>
+              <textarea
+                className="contact-form-textarea"
+                name="message"
+                required
+                minLength={10}
+                maxLength={5000}
+                rows={7}
+              />
+            </label>
 
-              <label className="contact-form-field">
-                <span className="contact-form-label">{t.messageLabel}</span>
-                <textarea
-                  className="contact-form-textarea"
-                  name="message"
-                  required
-                  minLength={10}
-                  maxLength={5000}
-                  rows={7}
-                />
-              </label>
+            <button type="submit" disabled={pending} className="portfolio-btn-primary w-full sm:w-auto">
+              {pending ? t.sendingLabel : t.submitLabel}
+            </button>
 
-              <button type="submit" disabled={pending} className="portfolio-btn-primary w-full sm:w-auto">
-                {pending ? t.sendingLabel : t.submitLabel}
-              </button>
+            <p className={`contact-form-message ${statusClass}`} aria-live="polite">
+              {statusMessage}
+            </p>
+          </form>
+        </motion.article>
 
-              <p className={`contact-form-message ${statusClass}`} aria-live="polite">
-                {statusMessage}
-              </p>
-            </form>
-          </motion.article>
+        <motion.aside
+          className="trajectory-card space-y-5"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ delay: 0.04, duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-white">{t.detailsTitle}</h2>
+            <p className="trajectory-card-body">{t.detailsBody}</p>
+          </div>
 
-          <motion.aside
-            className="trajectory-card space-y-5"
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={{ delay: 0.04, duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="space-y-2">
-              <h2 className="text-2xl font-semibold text-white">{t.detailsTitle}</h2>
-              <p className="trajectory-card-body">{t.detailsBody}</p>
-            </div>
+          <div className="space-y-2">
+            <p className="contact-form-label">{t.emailLabel}</p>
+            <p className="break-words text-slate-100">{CONTACT_EMAIL}</p>
+          </div>
 
-            <div className="space-y-2">
-              <p className="contact-form-label">{t.emailLabel}</p>
-              <p className="break-words text-slate-100">{CONTACT_EMAIL}</p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="portfolio-btn-secondary"
-              >
-                {t.linkedInLabel}
-              </a>
-              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="portfolio-btn-secondary">
-                {t.githubLabel}
-              </a>
-            </div>
-          </motion.aside>
-        </section>
-      </main>
-    </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="portfolio-btn-secondary"
+            >
+              {t.linkedInLabel}
+            </a>
+            <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="portfolio-btn-secondary">
+              {t.githubLabel}
+            </a>
+          </div>
+        </motion.aside>
+      </section>
+    </PageShell>
   );
 }

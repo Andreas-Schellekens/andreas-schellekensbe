@@ -1,7 +1,5 @@
 import type { Language } from "../language-provider";
 
-export type PortfolioSectionId = "intro" | "trajectory" | "projects" | "contact";
-
 export type PortfolioProject = {
   title: string;
   year: string;
@@ -15,14 +13,7 @@ export type PortfolioProject = {
 };
 
 export type PortfolioLocale = {
-  nav: {
-    sections: Record<PortfolioSectionId, string>;
-    languageLabel: string;
-    dutch: string;
-    english: string;
-  };
   hero: {
-    availability: string;
     greeting: string;
     intro: string;
     typingPrefix: string;
@@ -30,9 +21,6 @@ export type PortfolioLocale = {
     ctaPrimary: string;
     ctaSecondary: string;
     profileAlt: string;
-    statLabel: string;
-    statValue: string;
-    badges: string[];
   };
   trajectory: {
     title: string;
@@ -44,18 +32,13 @@ export type PortfolioLocale = {
     }>;
   };
   projects: {
-    title: string;
-    subtitle: string;
     openLabel: string;
     noLinkLabel: string;
     hoverLabel: string;
     items: PortfolioProject[];
   };
   contact: {
-    title: string;
-    body: string;
     formLabel: string;
-    emailLabel: string;
     email: string;
     linkedinLabel: string;
     linkedinUrl: string;
@@ -63,25 +46,12 @@ export type PortfolioLocale = {
     githubLabel: string;
     githubUrl: string;
     githubName: string;
-    footer: string;
   };
 };
 
 export const portfolioContent: Record<Language, PortfolioLocale> = {
   nl: {
-    nav: {
-      sections: {
-        intro: "Intro",
-        trajectory: "Flow",
-        projects: "Showcase",
-        contact: "Contact",
-      },
-      languageLabel: "Taal",
-      dutch: "NL",
-      english: "EN",
-    },
     hero: {
-      availability: "Open voor nieuwe samenwerkingen in 2026",
       greeting: "Andreas Schellekens",
       intro:
         "Ik ontwerp digitale producten met de precisie van engineering en de energie van een creatief merk.",
@@ -94,9 +64,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ctaPrimary: "Start een project",
       ctaSecondary: "Bekijk projecten",
       profileAlt: "Portret van Andreas Schellekens",
-      statLabel: "Focus",
-      statValue: "Frontend + Product Thinking",
-      badges: ["React", "Next.js", "UX Systems", "Performance"],
     },
     trajectory: {
       title: "Hoe Ik Werk",
@@ -121,8 +88,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ],
     },
     projects: {
-      title: "Project Stage",
-      subtitle: "Mijn uitgelichte projecten.",
       openLabel: "Open project",
       noLinkLabel: "Geen live link",
       hoverLabel: "Preview",
@@ -191,10 +156,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ],
     },
     contact: {
-      title: "Build Something Memorable",
-      body: "Heb je een idee dat meer moet voelen als een product dan een klassieke website? Laten we praten.",
       formLabel: "Contactformulier",
-      emailLabel: "Direct email",
       email: "andreas.schellekens8@gmail.com",
       linkedinLabel: "LinkedIn",
       linkedinUrl: "https://www.linkedin.com/in/andreas-schellekens/",
@@ -202,23 +164,10 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       githubLabel: "GitHub",
       githubUrl: "https://github.com/Andreas-Schellekens",
       githubName: "Andreas-Schellekens",
-      footer: "Ontworpen en ontwikkeld met focus op beleving en details.",
     },
   },
   en: {
-    nav: {
-      sections: {
-        intro: "Intro",
-        trajectory: "Flow",
-        projects: "Showcase",
-        contact: "Contact",
-      },
-      languageLabel: "Language",
-      dutch: "NL",
-      english: "EN",
-    },
     hero: {
-      availability: "Available for new collaborations in 2026",
       greeting: "Andreas Schellekens",
       intro:
         "I design digital products with engineering precision and the energy of a creative brand.",
@@ -231,9 +180,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ctaPrimary: "Start a project",
       ctaSecondary: "View projects",
       profileAlt: "Portrait of Andreas Schellekens",
-      statLabel: "Focus",
-      statValue: "Frontend + Product Thinking",
-      badges: ["React", "Next.js", "UX Systems", "Performance"],
     },
     trajectory: {
       title: "How I Work",
@@ -258,8 +204,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ],
     },
     projects: {
-      title: "Project Stage",
-      subtitle: "My featured projects.",
       openLabel: "Open project",
       noLinkLabel: "No live link",
       hoverLabel: "Preview",
@@ -328,10 +272,7 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       ],
     },
     contact: {
-      title: "Build Something Memorable",
-      body: "If your idea should feel more like a product than a typical website, let us talk.",
       formLabel: "Contact form",
-      emailLabel: "Direct email",
       email: "andreas.schellekens8@gmail.com",
       linkedinLabel: "LinkedIn",
       linkedinUrl: "https://www.linkedin.com/in/andreas-schellekens/",
@@ -339,7 +280,6 @@ export const portfolioContent: Record<Language, PortfolioLocale> = {
       githubLabel: "GitHub",
       githubUrl: "https://github.com/Andreas-Schellekens",
       githubName: "Andreas-Schellekens",
-      footer: "Designed and developed with a strong focus on experience and details.",
     },
   },
 };

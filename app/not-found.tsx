@@ -3,9 +3,28 @@
 import Link from "next/link";
 import ASCIIText from "./components/visuals/ASCIIText";
 import FaultyTerminal from "./components/visuals/FaultyTerminal";
+import { useLanguage } from "./components/language-provider";
 import styles from "./not-found.module.css";
 
+const content = {
+  nl: {
+    title: "Pagina niet gevonden",
+    body: "De link die je volgde bestaat niet (meer). Gebruik de knoppen hieronder om terug te keren naar de website.",
+    home: "Terug naar home",
+    projects: "Bekijk projecten",
+  },
+  en: {
+    title: "Page not found",
+    body: "The link you followed does not exist (anymore). Use the buttons below to return to the website.",
+    home: "Back to home",
+    projects: "View projects",
+  },
+} as const;
+
 export default function NotFound() {
+  const { language } = useLanguage();
+  const t = content[language];
+
   return (
     <main className={styles.root}>
       <div className={styles.backdrop} aria-hidden="true">
@@ -37,17 +56,14 @@ export default function NotFound() {
 
       <div className={styles.content}>
         <span className={styles.kicker}>404</span>
-        <h1 className={styles.title}>Pagina niet gevonden</h1>
-        <p className={styles.body}>
-          De link die je volgde bestaat niet (meer). Gebruik de knoppen hieronder om terug te keren naar de
-          website.
-        </p>
+        <h1 className={styles.title}>{t.title}</h1>
+        <p className={styles.body}>{t.body}</p>
         <div className={styles.actions}>
           <Link href="/" className={styles.primary}>
-            Terug naar home
+            {t.home}
           </Link>
           <Link href="/projects" className={styles.secondary}>
-            Bekijk projecten
+            {t.projects}
           </Link>
         </div>
       </div>

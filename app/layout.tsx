@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Syne, Geist } from "next/font/google";
+import { IBM_Plex_Mono, Syne } from "next/font/google";
 import { LanguageProvider } from "./components/language-provider";
 import { MotionProvider } from "./components/motion-provider";
 import SiteHeader from "./components/site-header";
 import "./globals.css";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const syne = Syne({
   variable: "--font-syne",
@@ -30,10 +28,6 @@ const palette = {
 export const metadata: Metadata = {
   title: "Andreas Schellekens | Portfolio",
   description: "Interactive portfolio experience by Andreas Schellekens",
-  icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    shortcut: ["/icon.svg"],
-  },
 };
 
 export default function RootLayout({
@@ -45,7 +39,7 @@ export default function RootLayout({
     <html
       lang="nl"
       suppressHydrationWarning
-      className={`h-full antialiased ${syne.variable} ${ibmPlexMono.variable} font-sans ${geist.variable}`}
+      className={`h-full antialiased ${syne.variable} ${ibmPlexMono.variable}`}
       style={
         {
           "--color-bg": palette.bg,
