@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import GlassSheen from "../components/glass-sheen";
 import { LanguageProvider } from "../components/language-provider";
 import { MotionProvider } from "../components/motion-provider";
 import SiteFooter from "../components/site-footer";
@@ -49,6 +50,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
     >
       <body className="min-h-full flex flex-col">
         <MotionProvider>
+          <GlassSheen />
           <LanguageProvider language={lang}>
             <SiteHeader />
             {children}

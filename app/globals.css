@@ -9,6 +9,27 @@ html {
   /* Shared by the header, page content and footer so their edges line up. */
   --page-max-width: 84rem;
   --page-gutter: clamp(1.1rem, 3vw, 2.6rem);
+  /* Liquid glass material, see the "Liquid glass" section at the end of this file. */
+  --glass-tint: color-mix(in srgb, var(--color-layer) 44%, transparent);
+  --glass-filter: blur(18px) saturate(180%) brightness(1.06);
+  --glass-rim: linear-gradient(
+    150deg,
+    rgb(255 255 255 / 55%),
+    rgb(255 255 255 / 12%) 26%,
+    rgb(255 255 255 / 3%) 55%,
+    rgb(255 255 255 / 24%)
+  );
+  --glass-rim-hover: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--color-accent) 90%, white),
+    color-mix(in srgb, var(--color-accent) 30%, transparent) 30%,
+    rgb(255 255 255 / 4%) 58%,
+    color-mix(in srgb, var(--color-accent) 55%, transparent)
+  );
+  --glass-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 16%),
+    inset 0 -1px 0 rgb(2 6 23 / 30%),
+    0 18px 42px rgb(2 6 23 / 38%);
   scroll-behavior: smooth;
   scroll-padding-top: 5.5rem;
 }
@@ -178,8 +199,6 @@ body {
   align-items: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 76%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 66%, transparent);
   padding: 0.46rem 0.84rem;
   font-size: 0.65rem;
   letter-spacing: 0.13em;
@@ -213,10 +232,7 @@ body {
 
 .hero-typing-wrap {
   border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 72%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 54%, transparent);
   padding: 0.95rem 1rem;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 6%);
 }
 
 .hero-typing-prefix {
@@ -261,12 +277,10 @@ body {
     color-mix(in srgb, var(--color-accent) 84%, white 16%),
     color-mix(in srgb, var(--color-highlight) 84%, white 16%)
   );
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--color-highlight) 27%, transparent);
 }
 
 .portfolio-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 38px color-mix(in srgb, var(--color-accent) 26%, transparent);
 }
 
 .portfolio-btn-secondary {
@@ -277,7 +291,6 @@ body {
 
 .portfolio-btn-secondary:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--color-accent) 72%, transparent);
 }
 
 .hero-portrait-wrapper {
@@ -288,23 +301,6 @@ body {
   position: relative;
   overflow: hidden;
   border-radius: 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--color-layer) 78%, transparent),
-    color-mix(in srgb, var(--color-bg) 78%, transparent)
-  );
-  box-shadow: 0 28px 56px color-mix(in srgb, #020617 45%, transparent);
-}
-
-.hero-portrait-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 32%, transparent);
-  mask: linear-gradient(165deg, black, transparent 48%, black);
-  pointer-events: none;
 }
 
 .hero-portrait-image-shell {
@@ -349,11 +345,7 @@ body {
 .trajectory-card {
   position: relative;
   border-radius: 1.15rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 75%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 62%, transparent);
-  backdrop-filter: blur(8px);
   padding: 1.05rem 1.08rem;
-  box-shadow: 0 14px 26px color-mix(in srgb, #020617 32%, transparent);
 }
 
 .trajectory-border-glow {
@@ -367,7 +359,6 @@ body {
 
 .trajectory-border-glow .trajectory-card {
   height: 100%;
-  background: color-mix(in srgb, var(--color-layer) 72%, transparent);
 }
 
 .trajectory-card-metric {
@@ -433,14 +424,10 @@ body {
   flex-direction: column;
   overflow: hidden;
   border-radius: 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 75%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 70%, transparent);
-  box-shadow: 0 18px 34px color-mix(in srgb, #020617 34%, transparent);
-  transition: border-color 240ms ease, transform 240ms ease;
+  transition: transform 240ms ease;
 }
 
 .featured-card:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 60%, transparent);
   transform: translateY(-3px);
 }
 
@@ -496,9 +483,6 @@ body {
   height: auto;
   min-height: 0;
   padding: clamp(0.35rem, 0.9vw, 0.55rem);
-  border: 1px solid color-mix(in srgb, var(--color-surface) 76%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 64%, transparent);
-  box-shadow: 0 18px 32px color-mix(in srgb, #020617 34%, transparent);
 }
 
 .projects-stack-shell {
@@ -507,12 +491,6 @@ body {
   height: auto;
   border-radius: 1.8rem;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
-  background: linear-gradient(
-    155deg,
-    color-mix(in srgb, var(--color-layer) 72%, transparent),
-    color-mix(in srgb, var(--color-bg) 74%, transparent)
-  );
 }
 
 .projects-stack-shell-cta {
@@ -611,16 +589,10 @@ body {
   isolation: isolate;
   overflow: hidden;
   border-radius: 1.35rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
-  background: linear-gradient(
-    155deg,
-    color-mix(in srgb, var(--color-layer) 74%, transparent),
-    color-mix(in srgb, var(--color-bg) 72%, transparent)
-  );
   padding: clamp(1.2rem, 2.4vw, 1.9rem);
 }
 
-.portfolio-contact-card::before {
+.portfolio-contact-card::after {
   content: "";
   position: absolute;
   inset: -50% 46% auto -14%;
@@ -749,11 +721,7 @@ body {
   align-items: flex-end;
   gap: 0.55rem;
   border-radius: 1rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 62%, transparent);
   padding: 0.58rem 0.66rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 14px 26px color-mix(in srgb, #020617 36%, transparent);
 }
 
 .contact-dock-item {
@@ -762,18 +730,6 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 72%, transparent);
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--color-bg) 78%, transparent),
-    color-mix(in srgb, var(--color-layer) 74%, transparent)
-  );
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.contact-dock-item:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 74%, transparent);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--color-accent) 20%, transparent);
 }
 
 .contact-dock-icon-wrap {
@@ -891,15 +847,6 @@ body {
 .site-header {
   /* Solid colour for the mobile menu panel; the bar itself is translucent glass. */
   --site-header-bg: #181a2f;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-surface) 60%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 72%, transparent);
-  backdrop-filter: blur(16px) saturate(140%);
-}
-
-@supports not (backdrop-filter: blur(1px)) {
-  .site-header {
-    background: var(--site-header-bg);
-  }
 }
 
 .site-nav {
@@ -1006,13 +953,6 @@ body {
   flex-direction: column;
   gap: 0.28rem;
   border-radius: 0.72rem;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 78%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 62%, transparent);
-  transition: border-color 200ms ease, background-color 200ms ease;
-}
-
-.site-menu-btn:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
 }
 
 .site-menu-btn-line {
@@ -1061,8 +1001,6 @@ body {
   align-items: center;
   gap: 0.2rem;
   border-radius: 9999px;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 75%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 64%, transparent);
   padding: 0.2rem;
 }
 
@@ -1152,8 +1090,6 @@ body {
 .site-footer {
   position: relative;
   z-index: 20;
-  border-top: 1px solid color-mix(in srgb, var(--color-surface) 60%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 78%, transparent);
 }
 
 .site-footer-inner {
@@ -1194,17 +1130,14 @@ body {
 .site-footer-link {
   display: inline-flex;
   border-radius: 9999px;
-  border: 1px solid color-mix(in srgb, var(--color-surface) 74%, transparent);
-  background: color-mix(in srgb, var(--color-layer) 64%, transparent);
   padding: 0.45rem 0.95rem;
   font-size: 0.82rem;
   font-weight: 600;
   color: #ebf3ff;
-  transition: border-color 200ms ease, color 200ms ease;
+  transition: color 200ms ease;
 }
 
 .site-footer-link:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 72%, transparent);
   color: var(--color-accent);
 }
 
@@ -1292,4 +1225,137 @@ body {
   animation-iteration-count: 1 !important;
   transition-duration: 1ms !important;
   scroll-behavior: auto !important;
+}
+
+/*
+ * Liquid glass: one material for every surface (panels, cards, pills, header, footer).
+ * Translucent tint + blurred, saturated backdrop + a specular sheen that follows the
+ * pointer (--glass-x/--glass-y, set by components/glass-sheen.tsx) + a bright rim drawn
+ * by ::before. Hosts need a positioning context for the rim (sticky/relative).
+ * To give a new surface the material, add its class to these lists.
+ */
+:is(
+    .site-header,
+    .site-footer,
+    .hero-pill,
+    .hero-typing-wrap,
+    .hero-portrait-card,
+    .trajectory-card,
+    .featured-card,
+    .projects-stack-item,
+    .portfolio-contact-card,
+    .contact-dock,
+    .contact-dock-item,
+    .portfolio-btn-secondary,
+    .site-toggle,
+    .site-menu-btn,
+    .site-footer-link
+  ) {
+  --glass-x: 20%;
+  --glass-y: 0%;
+  background:
+    radial-gradient(var(--glass-sheen-size, 18rem) circle at var(--glass-x) var(--glass-y), rgb(255 255 255 / 11%), transparent),
+    linear-gradient(165deg, rgb(255 255 255 / 8%), rgb(255 255 255 / 1%) 42%, rgb(255 255 255 / 4%)),
+    var(--glass-tint);
+  backdrop-filter: var(--glass-filter);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Small controls get a tighter sheen and a lighter drop shadow. */
+:is(.hero-pill, .contact-dock-item, .portfolio-btn-secondary, .site-toggle, .site-menu-btn, .site-footer-link) {
+  --glass-sheen-size: 4.5rem;
+  --glass-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 18%),
+    inset 0 -1px 0 rgb(2 6 23 / 30%),
+    0 6px 16px rgb(2 6 23 / 30%);
+}
+
+/* Header and footer span the viewport: a hairline instead of a rounded rim. */
+.site-header {
+  --glass-tint: color-mix(in srgb, var(--color-bg) 58%, transparent);
+  border-bottom: 1px solid rgb(255 255 255 / 9%);
+}
+
+.site-footer {
+  --glass-tint: color-mix(in srgb, var(--color-bg) 62%, transparent);
+  border-top: 1px solid rgb(255 255 255 / 9%);
+}
+
+:is(
+    .hero-pill,
+    .hero-typing-wrap,
+    .featured-card,
+    .contact-dock,
+    .portfolio-btn-secondary,
+    .site-toggle,
+    .site-menu-btn,
+    .site-footer-link
+  ) {
+  position: relative;
+}
+
+:is(
+    .hero-pill,
+    .hero-typing-wrap,
+    .hero-portrait-card,
+    .trajectory-card,
+    .featured-card,
+    .projects-stack-item,
+    .portfolio-contact-card,
+    .contact-dock,
+    .contact-dock-item,
+    .portfolio-btn-secondary,
+    .site-toggle,
+    .site-menu-btn,
+    .site-footer-link
+  )::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  background: var(--glass-rim);
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+
+/* Interactive glass warms its rim to the accent on hover/focus. */
+:is(.featured-card, .contact-dock-item, .portfolio-btn-secondary, .site-menu-btn, .site-footer-link):is(:hover, :focus-visible)::before {
+  background: var(--glass-rim-hover);
+}
+
+/* The primary button is coloured gel rather than clear glass: same highlights, solid tint. */
+.portfolio-btn-primary {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 45%),
+    inset 0 -2px 6px color-mix(in srgb, var(--color-deep) 30%, transparent),
+    0 12px 28px color-mix(in srgb, var(--color-highlight) 26%, transparent);
+}
+
+.portfolio-btn-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 50%),
+    inset 0 -2px 6px color-mix(in srgb, var(--color-deep) 30%, transparent),
+    0 18px 36px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.site-toggle-btn-active {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 45%),
+    inset 0 -1px 3px color-mix(in srgb, var(--color-deep) 30%, transparent);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-tint: color-mix(in srgb, var(--color-layer) 92%, transparent);
+  }
+
+  .site-header,
+  .site-footer {
+    --glass-tint: var(--color-bg);
+  }
 }

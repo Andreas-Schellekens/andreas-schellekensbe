@@ -104,7 +104,7 @@ export default function PortfolioExperience() {
                 glowIntensity={0.82}
                 glowColor="214 88 72"
                 colors={["#96BCFF", "#4F73CD", "#FDA481"]}
-                backgroundColor="#152340"
+                backgroundColor="transparent"
                 fillOpacity={0.34}
                 edgeSensitivity={24}
                 coneSpread={24}
